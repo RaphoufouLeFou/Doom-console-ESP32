@@ -1,0 +1,23 @@
+{
+    "idf.adapterTargetName": "esp32s3",
+    "idf.flashType": "UART",
+    "idf.portWin": "COM5",
+    "files.associations": {
+        "*.asm": "avr",
+        "initializer_list": "c",
+        "type_traits": "c",
+        "xutility": "c",
+        "spi_lcd.h": "c",
+        "d_player.h": "c",
+        "gammatbl.h": "c",
+        "v_video.h": "c",
+        "sdkconfig.h": "c",
+        "i_system.h": "c",
+        "mcp23017.h": "c",
+        "config.h": "c"
+    },
+    "idf.openOcdConfigs": [
+        "board/esp32s3-bridge.cfg"
+    ],
+    "C_Cpp.errorSquiggles": "disabled"
+}
