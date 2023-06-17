@@ -7,7 +7,7 @@ The console has an 1800 mAh battery, lasting in theroy for more than 15h of gami
 
 Main processor : esp32-S3 with 8Mb of flash, and 8Mb of RAM, dual core, running at 240Mhz.
 
-The screen is an LCD 2.7' SPI display, with a resolution of 320*240, and 16 bits colors.
+The screen is an LCD 2.4' SPI display, with a resolution of 320*240, and 16 bits colors.
 
 # Doom
 
