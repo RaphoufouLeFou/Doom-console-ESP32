@@ -3,7 +3,7 @@ The console is an esp32 based console, made to run doom II and other games.
 The main board is a custom PCB, as well as the case of the console.
 all is 3D printed
 
-The console has an 1800 MAh battery, lasting in theroy for more than 15h of gaming
+The console has an 1800 mAh battery, lasting in theroy for more than 15h of gaming
 
 Main processor : esp32-S3 with 8Mb of flash, and 8Mb of RAM, dual core, running at 240Mhz.
 
@@ -38,3 +38,5 @@ Doom run at a nearly constant 35 fps, whith is pretty good
 ![shematic1](https://github.com/RaphoufouLeFou/Doom-console-ESP32/blob/main/Console/Shematics/Sheet_1.png)
 
 ![shematic2](https://github.com/RaphoufouLeFou/Doom-console-ESP32/blob/main/Console/Shematics/Sheet_2.png)
+
+# Mainboard
