@@ -21,4 +21,15 @@ Doom run at a nearly constant 35 fps, whith is pretty good
 
 # Pictures
 
-![shematic](https://github.com/RaphoufouLeFou/Casio-message-and-connect/blob/main/Images/Connect-3.jpg)
+![shematic](https://github.com/RaphoufouLeFou/Doom-console-ESP32/blob/main/Console/Pictures/IMG20230617225416.jpg)
+
+![shematic](https://github.com/RaphoufouLeFou/Doom-console-ESP32/blob/main/Console/Pictures/IMG20230617225423.jpg)
+
+![shematic](https://github.com/RaphoufouLeFou/Doom-console-ESP32/blob/main/Console/Pictures/IMG20230617225437.jpg)
+
+![shematic](https://github.com/RaphoufouLeFou/Doom-console-ESP32/blob/main/Console/Pictures/IMG20230617225511.jpg)
+
+![shematic](https://github.com/RaphoufouLeFou/Doom-console-ESP32/blob/main/Console/Pictures/IMG20230617225515.jpg)
+
+![shematic](https://github.com/RaphoufouLeFou/Doom-console-ESP32/blob/main/Console/Pictures/IMG20230617225528.jpg)
+
