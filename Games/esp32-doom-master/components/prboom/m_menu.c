@@ -875,7 +875,7 @@ void M_DrawSave(void)
   if (saveStringEnter)
     {
     i = M_StringWidth(savegamestrings[saveSlot]);
-    M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"_");
+    M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"1");
     }
 }
 
@@ -4126,11 +4126,12 @@ boolean M_Responder (event_t* ev) {
   joywait = I_GetTime() + 2;
       }
 
-    if (ev->data1&1)
+    /*if (ev->data1&1)
       {
-  ch = key_menu_enter;                             // phares 3/7/98
-  joywait = I_GetTime() + 5;
-      }
+        ch = key_menu_enter;   
+        printf("Enter is active now, %d\n", ev->data1);                          // phares 3/7/98
+        joywait = I_GetTime() + 5;
+      }*/
 
     if (ev->data1&2)
       {
@@ -4187,14 +4188,26 @@ boolean M_Responder (event_t* ev) {
       else if (ch == key_menu_escape)                    // phares 3/7/98
   {
     saveStringEnter = 0;
-    strcpy(&savegamestrings[saveSlot][0],saveOldString);
+    char *saveSlotname=NULL;
+    saveSlotname = malloc(3);
+    itoa(saveSlot, saveSlotname, 10);
+    strcpy(&savegamestrings[saveSlot][0], saveSlotname);
   }
 
       else if (ch == key_menu_enter)                     // phares 3/7/98
   {
+    printf("Saving...\n");
     saveStringEnter = 0;
     if (savegamestrings[saveSlot][0])
       M_DoSave(saveSlot);
+    else {
+      printf("not saving\n");
+      char *saveSlotname=NULL;
+      saveSlotname = malloc(3);
+      itoa(saveSlot, saveSlotname, 10);
+      strcpy(&savegamestrings[saveSlot][0], saveSlotname);
+      M_DoSave(saveSlot);
+    }
   }
 
       else
@@ -4321,7 +4334,7 @@ boolean M_Responder (event_t* ev) {
       {
       usegamma++;
       if (usegamma > 4)
-  usegamma = 0;
+  usegamma = 4;
       players[consoleplayer].message =
   usegamma == 0 ? s_GAMMALVL0 :
   usegamma == 1 ? s_GAMMALVL1 :
@@ -4430,6 +4443,7 @@ boolean M_Responder (event_t* ev) {
   if (ptr1->m_flags & S_YESNO) // yes or no setting?
     {
     if (ch == key_menu_enter) {
+      printf("Enter 1\n");
       *ptr1->var.def->location.pi = !*ptr1->var.def->location.pi; // killough 8/15/98
 
       // phares 4/14/98:
@@ -4476,6 +4490,7 @@ boolean M_Responder (event_t* ev) {
          * value is entered).
          */
         if (ch == key_menu_enter) {
+          printf("Enter 2\n");
     if (gather_count) {     // Any input?
       int value;
 
@@ -4584,6 +4599,7 @@ boolean M_Responder (event_t* ev) {
       }
     }
     if (ch == key_menu_enter) {
+      printf("Enter 3\n");
       // phares 4/14/98:
       // If not in demoplayback, demorecording, or netgame,
       // and there's a second variable in var2, set that
@@ -4801,6 +4817,7 @@ boolean M_Responder (event_t* ev) {
 
       if (ch == key_menu_enter)
         {
+          printf("Enter 4\n");
     *ptr1->var.def->location.pi = color_palette_x + 16*color_palette_y;
     M_SelectDone(ptr1);                         // phares 4/17/98
     colorbox_active = false;
@@ -4840,6 +4857,7 @@ boolean M_Responder (event_t* ev) {
         else if ((ch == key_menu_enter) ||
            (ch == key_menu_escape))
     {
+      printf("Enter 5 sus\n");
       *ptr1->var.def->location.ppsz = chat_string_buffer;
       M_SelectDone(ptr1);   // phares 4/17/98
     }
@@ -4910,6 +4928,7 @@ boolean M_Responder (event_t* ev) {
       if (ch == key_menu_enter)
   {
     int flags = ptr1->m_flags;
+    printf("Enter 6\n");
 
     // You've selected an item to change. Highlight it, post a new
     // message about what to do, and get ready to process the
@@ -5102,6 +5121,7 @@ boolean M_Responder (event_t* ev) {
 
   if (ch == key_menu_enter)                            // phares 3/7/98
     {
+      printf("Enter 7\n");
       if (currentMenu->menuitems[itemOn].routine &&
     currentMenu->menuitems[itemOn].status)
   {

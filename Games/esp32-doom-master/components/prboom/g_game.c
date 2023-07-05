@@ -389,10 +389,12 @@ void G_BuildTiccmd(ticcmd_t* cmd)
     // buttons
   cmd->chatchar = HU_dequeueChatChar();
 
-  if (gamekeydown[key_fire] || joybuttons[joybfire])
+  if (gamekeydown[key_fire]){
     cmd->buttons |= BT_ATTACK;
+    printf("Fire !\n");
+  }
 
-  if (gamekeydown[key_use] || joybuttons[joybuse])
+  if (gamekeydown[key_use])
     {
       cmd->buttons |= BT_USE;
       // clear double clicks if hit use button
