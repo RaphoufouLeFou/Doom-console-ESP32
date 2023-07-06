@@ -473,12 +473,9 @@ void (Z_Free)(void *p
 
 #if 1
   if (block->id != ZONEID)
+    printf("Z_Free: freed a pointer without ZONEID\n");
     
-  printf("Z_Free: freed a pointer without ZONEID\n");
-  //printf("test3----------------------//---------------------------****\n");
-  //printf("test7-------------------------------------------------------------------------------******************\n");
   block->id = 0;              // Nullify id so another free fails
-  //printf("test5------------------------------*******\n");
   
 #endif
 
@@ -494,7 +491,6 @@ void (Z_Free)(void *p
       block->next->prev = block->prev;
   
       free_memory += block->size;
-//printf("test9-------------------------------------------------------------------------------******************\n");
 #ifdef INSTRUMENTED
   if (block->tag >= PU_PURGELEVEL)
     purgable_memory -= block->size;
@@ -504,11 +500,9 @@ void (Z_Free)(void *p
   
   memset(block, gametic & 0xff, block->size + HEADER_SIZE);
 #endif
-//printf("test6-------------------------------------------------------------------------------******************\n");
 #ifdef HAVE_LIBDMALLOC
   dmalloc_free(file,line,block,DMALLOC_FUNC_MALLOC);
 #else
-  //printf("test7-------------------------------------------------------------------------------******************\n");
   (free)(block);
 #endif
 #ifdef INSTRUMENTED

@@ -844,7 +844,7 @@ void M_ReadSaveStrings(void)
      * cph - add not-demoplayback parameter */
     G_SaveGameName(name,sizeof(name),i,false);
     fp=NULL;
-    //fp = fopen(name,"rb");
+    fp = fopen(name,"rb");
     if (!fp) {   // Ty 03/27/98 - externalized:
       strcpy(&savegamestrings[i][0],s_EMPTYSTRING);
       LoadMenue[i].status = 0;
@@ -892,6 +892,20 @@ static void M_DoSave(int slot)
     quickSaveSlot = slot;
 }
 
+// [FG] generate a default save slot name if the user saves to an empty slot
+static void SetDefaultSaveName (int slot)
+{
+    // map from IWAD or PWAD?
+
+        char *name = NULL;
+        name = malloc(3);
+        itoa(slot, name, 10);
+
+        snprintf(savegamestrings[itemOn], SAVESTRINGSIZE,
+                   "%s", name);
+        free(name);
+}
+
 //
 // User wants to save. Start string input for M_Responder
 //
@@ -903,7 +917,10 @@ void M_SaveSelect(int choice)
   saveSlot = choice;
   strcpy(saveOldString,savegamestrings[choice]);
   if (!strcmp(savegamestrings[choice],s_EMPTYSTRING)) // Ty 03/27/98 - externalized
+  { 
     savegamestrings[choice][0] = 0;
+    SetDefaultSaveName(choice);
+  }
   saveCharIndex = strlen(savegamestrings[choice]);
 }
 
@@ -954,16 +971,17 @@ enum
 menuitem_t OptionsMenu[]=
 {
   // killough 4/6/98: move setup to be a sub-menu of OPTIONs
-  {1,"", M_General, 'g'},      // killough 10/98
-  {1,"",  M_Setup,   's'},                          // phares 3/21/98
-  {1,"", M_EndGame,'e'},
-  {1,"",  M_ChangeMessages,'m'},
-  /*    {1,"M_DETAIL",  M_ChangeDetail,'g'},  unused -- killough */
-  {2,"", M_SizeDisplay,'s'},
+  
+  {1,"M_ENDGAM", M_EndGame,'e'},
   {-1,"",0},
-  {1,"",  M_ChangeSensitivity,'m'},
-  /* {-1,"",0},  replaced with submenu -- killough */
-  {1,"",   M_Sound,'s'}
+  {1,"M_MESSG",  M_ChangeMessages,'m'},
+  /*    {1,"M_DETAIL",  M_ChangeDetail,'g'},  unused -- killough */
+  {-1,"",0},
+  {2,"M_SCRNSZ", M_SizeDisplay,'s'},
+  {-1,"",0},
+  {1,"M_SVOL",   M_Sound,'s'},
+  {-1,"",0}
+
 };
 
 menu_t OptionsDef =
@@ -989,7 +1007,7 @@ void M_DrawOptions(void)
   // proff/nicolas 09/20/98 -- changed for hi-res
   V_DrawNamePatch(108, 15, 0, "M_OPTTTL", CR_DEFAULT, VPT_STRETCH);
 
-  V_DrawNamePatch(OptionsDef.x + 120, OptionsDef.y+LINEHEIGHT*messages, 0,
+  V_DrawNamePatch(OptionsDef.x + 120, OptionsDef.y+LINEHEIGHT*2, 0,
       msgNames[showMessages], CR_DEFAULT, VPT_STRETCH);
 
   M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(scrnsize+1),

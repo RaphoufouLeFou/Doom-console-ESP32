@@ -297,8 +297,8 @@ void G_BuildTiccmd(ticcmd_t* cmd)
   memset(cmd,0,sizeof*cmd);
   cmd->consistancy = consistancy[consoleplayer][maketic%BACKUPTICS];
 
-  strafe = gamekeydown[key_strafe] || joybuttons[joybstrafe];
-  //strafe = 0;
+  //strafe = gamekeydown[key_strafe] || joybuttons[joybstrafe];
+  strafe = 0;
   //e6y: the "RUN" key inverts the autorun state
   speed = (gamekeydown[key_speed] || joybuttons[joybspeed] ? !autorun : autorun); // phares
 
@@ -343,46 +343,46 @@ void G_BuildTiccmd(ticcmd_t* cmd)
 
       if (gamekeydown[key_right]){
         side += sidemove[speed];
-        //printf("right slide\n");
+        printf("right slide\n");
       }
       if (gamekeydown[key_left]){
         side -= sidemove[speed];
-        //printf("left slide\n");
+        printf("left slide\n");
       }
       if (joyxmove > 0){
         cmd->angleturn -= (angleturn[tspeed]*joyxmove)/2.0f;
         forward += (forwardmove[0])/10.0f;
-        //printf("right view\n");
+        printf("right view\n");
         }
       if (joyxmove < 0){
         cmd->angleturn += (angleturn[tspeed]*-joyxmove)/2.0f;
         forward += (forwardmove[0])/10.0f;
-        //printf("left view\n");
+        printf("left view\n");
       }
     }
 
   if (gamekeydown[key_up]){
     forward += forwardmove[speed];
-    //printf("forward move\n");
+    printf("forward move\n");
     }
   if (gamekeydown[key_down]){
-    //printf("backward move\n");
+    printf("backward move\n");
     forward -= forwardmove[speed];
     }
   if (joyymove < 0){
-    //printf("forward move2\n");
+    printf("forward move2\n");
     forward += (forwardmove[speed]*-joyymove)/2.0f;
     }
   if (joyymove > 0){
-    //printf("backward move2\n");
+    printf("backward move2\n");
     forward -= (forwardmove[speed]*joyymove)/2.0f;
     }
   if (gamekeydown[key_straferight]){
-    //printf("right move\n");
+    printf("right move\n");
     side += sidemove[speed];
     }
   if (gamekeydown[key_strafeleft]){
-    //printf("left move\n");
+    printf("left move\n");
     side -= sidemove[speed];
     }
 
@@ -391,7 +391,7 @@ void G_BuildTiccmd(ticcmd_t* cmd)
 
   if (gamekeydown[key_fire]){
     cmd->buttons |= BT_ATTACK;
-    printf("Fire !\n");
+    //printf("Fire !\n");
   }
 
   if (gamekeydown[key_use])
