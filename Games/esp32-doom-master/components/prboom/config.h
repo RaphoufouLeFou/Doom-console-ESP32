@@ -121,7 +121,7 @@
 
 /* Define this to see real-time memory allocation statistics, and enable extra
    debugging features */
-/* #undef INSTRUMENTED */
+//#define INSTRUMENTED 
 
 /* If your platform has a fast version of max, define MAX to it */
 /* #undef MAX */

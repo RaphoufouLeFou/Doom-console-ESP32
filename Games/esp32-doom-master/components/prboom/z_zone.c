@@ -85,6 +85,8 @@
 // Number of mallocs & frees kept in history buffer (must be a power of 2)
 #define ZONE_HISTORY 4
 
+//#define INSTRUMENTED
+
 // End Tunables
 
 typedef struct memblock {
@@ -469,17 +471,17 @@ void (Z_Free)(void *p
   if (!p)
     return;
 
-#if 0
+#if 1
   if (block->id != ZONEID)
     
   printf("Z_Free: freed a pointer without ZONEID\n");
-  printf("test3-------------------------------------------------------------------------------******************\n");
+  //printf("test3----------------------//---------------------------****\n");
   //printf("test7-------------------------------------------------------------------------------******************\n");
-  //block->id = 0;              // Nullify id so another free fails
-  printf("test5-------------------------------------------------------------------------------******************\n");
+  block->id = 0;              // Nullify id so another free fails
+  //printf("test5------------------------------*******\n");
   
 #endif
-/*
+
   if (block->user)            // Nullify user if one exists
     *block->user = NULL;
   
@@ -492,7 +494,7 @@ void (Z_Free)(void *p
       block->next->prev = block->prev;
   
       free_memory += block->size;
-printf("test9-------------------------------------------------------------------------------******************\n");
+//printf("test9-------------------------------------------------------------------------------******************\n");
 #ifdef INSTRUMENTED
   if (block->tag >= PU_PURGELEVEL)
     purgable_memory -= block->size;
@@ -502,17 +504,17 @@ printf("test9-------------------------------------------------------------------
   
   memset(block, gametic & 0xff, block->size + HEADER_SIZE);
 #endif
-printf("test6-------------------------------------------------------------------------------******************\n");
+//printf("test6-------------------------------------------------------------------------------******************\n");
 #ifdef HAVE_LIBDMALLOC
   dmalloc_free(file,line,block,DMALLOC_FUNC_MALLOC);
 #else
-  printf("test7-------------------------------------------------------------------------------******************\n");
+  //printf("test7-------------------------------------------------------------------------------******************\n");
   (free)(block);
 #endif
 #ifdef INSTRUMENTED
       Z_DrawStats();           // print memory allocation stats
 #endif
-*/
+
 
 }
 

@@ -182,9 +182,12 @@ void gamepadPoll(void)
 	//joyValX=0;
 	//joyValnumY=0;
 	//joyValnumX=0;
-
+	//char test = NULL;
+	//test = calloc(10000,sizeof(char));
+	//free(test);
+	printf("[APP] Free memory: %f Mb\n", (esp_get_free_heap_size())/1000000.0f);
 	event_t evButton;
-	printf("update !\n");
+	//printf("update !\n");
 	if (gpio_get_level(GPIO_NUM_18)!=GpioVal0) {
 		evButton.type=!gpio_get_level(GPIO_NUM_18)?ev_keyup:ev_keydown;
 		evButton.data1=key_fire;
@@ -196,7 +199,7 @@ void gamepadPoll(void)
 	if (gpio_get_level(GPIO_NUM_8)!=GpioVal1) {
 		evButton.type=!gpio_get_level(GPIO_NUM_8)?ev_keyup:ev_keydown;
 		evButton.data1=key_weapontoggle;
-		printf("[APP] Free memory: %ld bytes", esp_get_free_heap_size());
+		
 		GpioVal1=gpio_get_level(GPIO_NUM_8);
 		printf("8 is now %d\n", GpioVal1);
 		D_PostEvent(&evButton);

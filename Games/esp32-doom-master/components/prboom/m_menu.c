@@ -5120,27 +5120,27 @@ boolean M_Responder (event_t* ev) {
     }
 
   if (ch == key_menu_enter)                            // phares 3/7/98
-    {
-      printf("Enter 7\n");
-      if (currentMenu->menuitems[itemOn].routine &&
-    currentMenu->menuitems[itemOn].status)
   {
-    currentMenu->lastOn = itemOn;
-    if (currentMenu->menuitems[itemOn].status == 2)
+    printf("Enter 7\n");
+    if (currentMenu->menuitems[itemOn].routine &&
+      currentMenu->menuitems[itemOn].status)
+    {
+      currentMenu->lastOn = itemOn;
+      if (currentMenu->menuitems[itemOn].status == 2)
       {
         currentMenu->menuitems[itemOn].routine(1);   // right arrow
         S_StartSound(NULL,sfx_stnmov);
       }
-    else
+      else
       {
         currentMenu->menuitems[itemOn].routine(itemOn);
         S_StartSound(NULL,sfx_pistol);
       }
-  }
+    }
       //jff 3/24/98 remember last skill selected
       // killough 10/98 moved to skill-specific functions
       return true;
-    }
+  }
 
   if (ch == key_menu_escape)                           // phares 3/7/98
     {

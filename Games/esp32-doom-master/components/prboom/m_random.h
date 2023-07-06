@@ -142,7 +142,7 @@ extern unsigned long rngseed;          // The starting seed (not part of state)
 int P_Random(pr_class_t DA(const char *, int));
 
 #ifdef INSTRUMENTED
-#define P_Random(a) (P_Random) (a, __FILE__,__LINE__)
+//#define P_Random(a) (P_Random) (a, __FILE__,__LINE__)
 #endif
 
 // Returns a number from 0 to 255,
