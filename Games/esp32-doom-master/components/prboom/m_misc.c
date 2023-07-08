@@ -108,6 +108,7 @@ boolean M_WriteFile(char const *name, char *source, int length, int slot)
     I_EndRead();                         // Disk icon off
   }
 
+
   return length;
 }
 

@@ -1575,7 +1575,7 @@ void G_DoLoadGame(void)
     checksum = G_Signature();
 
     if (memcmp(&checksum, save_p, sizeof checksum)) {
-      if (0) {
+      if (!forced_loadgame) {
         char *msg = malloc(strlen(save_p + sizeof checksum) + 128);
         strcpy(msg,"Incompatible Savegame!!!\n");
         if (save_p[sizeof checksum])
@@ -1746,7 +1746,6 @@ static void G_DoSaveGame (boolean menu)
   CheckSaveGame(SAVESTRINGSIZE+VERSIONSIZE+sizeof(uint_64_t));
   
   memcpy (save_p, description, SAVESTRINGSIZE);
-  printf("version saved : %s, in %s\n", save_p, description);
   save_p += SAVESTRINGSIZE;
   memset (name2,0,sizeof(name2));
 
@@ -1758,7 +1757,6 @@ static void G_DoSaveGame (boolean menu)
       memcpy (save_p, name2, VERSIONSIZE);
       i = num_version_headers+1;
     }
-  printf("version saved bis : %s, in %s\n", save_p, name2);
   save_p += VERSIONSIZE;
 
   { /* killough 3/16/98, 12/98: store lump name checksum */

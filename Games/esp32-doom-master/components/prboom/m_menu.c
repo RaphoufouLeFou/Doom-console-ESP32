@@ -849,15 +849,13 @@ void M_ReadSaveStrings(void)
 
     const esp_partition_t* part;
 	  part=esp_partition_find_first(65, i, NULL);
-	  if (part==NULL)
+    esp_partition_read_raw(part, 32, &savegamestrings[i], SAVESTRINGSIZE);
+	  if (savegamestrings[i][0]==0xff)
     {
       strcpy(&savegamestrings[i][0],s_EMPTYSTRING);
       LoadMenue[i].status = 0;
       continue;
     }
-    
-    esp_partition_read_raw(part, &savegamestrings[i], 0, SAVESTRINGSIZE);
-
     LoadMenue[i].status = 1;
   }
 }
@@ -924,7 +922,6 @@ void M_SaveSelect(int choice)
   strcpy(saveOldString,savegamestrings[choice]);
   if (!strcmp(savegamestrings[choice],s_EMPTYSTRING)) // Ty 03/27/98 - externalized
   { 
-    savegamestrings[choice][0] = 0;
     SetDefaultSaveName(choice);
   }
   saveCharIndex = strlen(savegamestrings[choice]);
@@ -4220,12 +4217,10 @@ boolean M_Responder (event_t* ev) {
 
       else if (ch == key_menu_enter)                     // phares 3/7/98
   {
-    printf("Saving...\n");
     saveStringEnter = 0;
     if (savegamestrings[saveSlot][0])
       M_DoSave(saveSlot);
     else {
-      printf("not saving\n");
       char *saveSlotname=NULL;
       saveSlotname = malloc(3);
       itoa(saveSlot, saveSlotname, 10);
