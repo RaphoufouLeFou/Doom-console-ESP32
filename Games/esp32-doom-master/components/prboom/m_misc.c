@@ -47,7 +47,7 @@
 #endif
 #include <fcntl.h>
 #include <sys/stat.h>
-
+#include "esp_attr.h"
 #include "doomstat.h"
 #include "m_argv.h"
 #include "g_game.h"
@@ -70,33 +70,43 @@
 #include "r_draw.h"
 #include "r_demo.h"
 #include "r_fps.h"
+#include "esp_err.h"
+#include "esp_partition.h"
+#include <esp_spi_flash.h>
+#include "esp_log.h"
 
 /* cph - disk icon not implemented */
 static inline void I_BeginRead(void) {}
 static inline void I_EndRead(void) {}
 
+static const char *TAG = "SaveDialog";
 /*
  * M_WriteFile
  *
  * killough 9/98: rewritten to use stdio and to flash disk icon
  */
 
-boolean M_WriteFile(char const *name, void *source, int length)
+boolean M_WriteFile(char const *name, char *source, int length)
 {
-  FILE *fp;
-  return 0;
+
   errno = 0;
+  printf("Starting saving process\n");
+  const esp_partition_t* part;
+	part=esp_partition_find_first(65, 0, NULL);
+	if (part==NULL) printf("Couldn't find save part!\n");
+  else{
+    I_BeginRead();                       // Disk icon on
+    static char ChrLen[32];
+    itoa(length, ChrLen, 10);
 
-  if (!(fp = fopen(name, "wb")))       // Try opening file
-    return 0;                          // Could not open file for writing
+    ESP_ERROR_CHECK(esp_partition_erase_range(part, 0, length+32));
+    ESP_ERROR_CHECK(esp_partition_write_raw(part, 0, ChrLen, sizeof(ChrLen)));
+    ESP_ERROR_CHECK(esp_partition_write_raw(part, 32, source, length));
 
-  I_BeginRead();                       // Disk icon on
-  length = fwrite(source, 1, length, fp) == (size_t)length;   // Write data
-  fclose(fp);
-  I_EndRead();                         // Disk icon off
+    printf("Saved %s\n", name);
 
-  if (!length)                         // Remove partially written file
-    remove(name);
+    I_EndRead();                         // Disk icon off
+  }
 
   return length;
 }
@@ -107,30 +117,32 @@ boolean M_WriteFile(char const *name, void *source, int length)
  * killough 9/98: rewritten to use stdio and to flash disk icon
  */
 
-int M_ReadFile(char const *name, byte **buffer)
+int M_ReadFile(char const *name, char **buffer)
 {
   FILE *fp;
 
-  lprintf(LO_WARN, "Attempting M_ReadFile %s\n", name);
-  return -1;
-  if ((fp = fopen(name, "rb")))
+  printf("Attempting M_ReadFile %s\n", name);
+  const esp_partition_t* part;
+	part=esp_partition_find_first(65, 0, NULL);
+	if (part==NULL) printf("Couldn't find save part!\n");
+  else 
     {
-      size_t length;
-
       I_BeginRead();
-      fseek(fp, 0, SEEK_END);
-      length = ftell(fp);
-      fseek(fp, 0, SEEK_SET);
-      *buffer = Z_Malloc(length, PU_STATIC, 0);
-      if (fread(*buffer, 1, length, fp) == length)
-        {
-          fclose(fp);
-          I_EndRead();
-          return length;
-        }
-      fclose(fp);
-    }
+      
+      static char lenBuffer[32];
 
+      ESP_ERROR_CHECK(esp_partition_read_raw(part, 0, lenBuffer, sizeof(lenBuffer)));
+
+      int length = atoi(lenBuffer);
+      *buffer = (char*)malloc((length+1)*sizeof(char));
+
+      char *readData = malloc((length)*sizeof(char));
+      int err = esp_partition_read_raw(part, 32, *buffer, length);
+      I_EndRead();
+
+      return length;
+
+    }
   /* cph 2002/08/10 - this used to return 0 on error, but that's ambiguous,
    * because we could have a legit 0-length file. So make it -1. */
   return -1;

@@ -246,6 +246,14 @@ void gamepadPoll(void)
 		GpioVal7=gpio_get_level(GPIO_NUM_18);
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_18)) GpioVal7=0;
+
+		if (gpio_get_level(GPIO_NUM_15)!=GpioVal6) {
+		evButton.type=!gpio_get_level(GPIO_NUM_15)?ev_keyup:ev_keydown;
+		evButton.data1='y';
+		GpioVal6=gpio_get_level(GPIO_NUM_15);
+		//printf("15 is now %d\n", GpioVal6);
+		D_PostEvent(&evButton);
+	}else if(!gpio_get_level(GPIO_NUM_15)) GpioVal6=0;
 }
 
 

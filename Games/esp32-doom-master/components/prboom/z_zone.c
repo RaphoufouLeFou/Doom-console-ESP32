@@ -113,7 +113,6 @@ static memblock_t *blockbytag[PU_MAX];
 static int memory_size = 0;
 static int free_memory = 0;
 
-#ifdef INSTRUMENTED
 
 // statistics for evaluating performance
 static int active_memory = 0;
@@ -216,7 +215,6 @@ void Z_DumpMemory(void)
     total_malloc + total_cache + total_free);
   fclose(fp);
 }
-#endif
 #endif
 
 #ifdef INSTRUMENTED
@@ -504,6 +502,7 @@ void (Z_Free)(void *p
   dmalloc_free(file,line,block,DMALLOC_FUNC_MALLOC);
 #else
   (free)(block);
+  //Z_DrawStats(); 
 #endif
 #ifdef INSTRUMENTED
       Z_DrawStats();           // print memory allocation stats

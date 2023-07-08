@@ -60,6 +60,9 @@
 #include "i_sound.h"
 #include "r_demo.h"
 #include "r_fps.h"
+#include "esp_err.h"
+#include "esp_partition.h"
+#include <esp_spi_flash.h>
 
 extern patchnum_t hu_font[HU_FONTSIZE];
 extern boolean  message_dontfuckwithme;
@@ -843,15 +846,18 @@ void M_ReadSaveStrings(void)
     /* killough 3/22/98
      * cph - add not-demoplayback parameter */
     G_SaveGameName(name,sizeof(name),i,false);
-    fp=NULL;
-    fp = fopen(name,"rb");
-    if (!fp) {   // Ty 03/27/98 - externalized:
+
+    const esp_partition_t* part;
+	  part=esp_partition_find_first(65, i, NULL);
+	  if (part==NULL)
+    {
       strcpy(&savegamestrings[i][0],s_EMPTYSTRING);
       LoadMenue[i].status = 0;
       continue;
     }
-    fread(&savegamestrings[i], SAVESTRINGSIZE, 1, fp);
-    fclose(fp);
+    
+    esp_partition_read_raw(part, &savegamestrings[i], 0, SAVESTRINGSIZE);
+
     LoadMenue[i].status = 1;
   }
 }
@@ -875,7 +881,7 @@ void M_DrawSave(void)
   if (saveStringEnter)
     {
     i = M_StringWidth(savegamestrings[saveSlot]);
-    M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"1");
+    M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"");
     }
 }
 
