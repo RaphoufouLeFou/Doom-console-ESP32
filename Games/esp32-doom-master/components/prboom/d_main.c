@@ -969,7 +969,7 @@ static void IdentifyVersion (void)
 //
 
 #define MAXARGVS 100
-
+#if 0
 static void FindResponseFile (void)
 {
   int i;
@@ -979,7 +979,7 @@ static void FindResponseFile (void)
       {
         int  size;
         int  index;
-	int indexinfile;
+	    int indexinfile;
         byte *file = NULL;
         const char **moreargs = malloc(myargc * sizeof(const char*));
         const char **newargv;
@@ -992,13 +992,13 @@ static void FindResponseFile (void)
         // READ THE RESPONSE FILE INTO MEMORY
         // proff 04/05/2000: changed for searching responsefile
         // cph 2002/08/09 - use M_ReadFile for simplicity
-	size = M_ReadFile(fname, &file);
+	      size = M_ReadFile(fname, &file);
         // proff 04/05/2000: Added for searching responsefile
         if (size < 0)
         {
           strcat(strcpy(fname,I_DoomExeDir()),&myargv[i][1]);
           AddDefaultExtension(fname,".rsp");
-	  size = M_ReadFile(fname, &file);
+	      size = M_ReadFile(fname, &file);
         }
         if (size < 0)
         {
@@ -1081,7 +1081,7 @@ static void FindResponseFile (void)
         break;
       }
 }
-
+#endif
 //
 // DoLooseFiles
 //
@@ -1272,7 +1272,7 @@ static void D_DoomMainSetup(void)
       for (i=0; i<myargc; i++)
         if (myargv[i][0]=='@')
           rsp_found=true;
-      FindResponseFile();
+      //FindResponseFile();
     } while (rsp_found==true);
   }
 

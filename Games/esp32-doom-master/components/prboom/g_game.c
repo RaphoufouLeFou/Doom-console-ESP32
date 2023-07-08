@@ -1540,7 +1540,7 @@ void G_DoLoadGame(void)
 
   gameaction = ga_nothing;
 
-  length = M_ReadFile(name, &savebuffer);
+  length = M_ReadFile(name, &savebuffer, savegameslot);
   if (length<=0)
     I_Error("Couldn't read file %s: %s", name, "(Unknown Error)");
 
@@ -1842,7 +1842,7 @@ static void G_DoSaveGame (boolean menu)
 
   Z_CheckHeap();
 
-  doom_printf( "%s", M_WriteFile(name, savebuffer, save_p - savebuffer)
+  doom_printf( "%s", M_WriteFile(name, savebuffer, save_p - savebuffer, savegameslot)
          ? s_GGSAVED /* Ty - externalised */
          : "Game save failed!"); // CPhipps - not externalised
 

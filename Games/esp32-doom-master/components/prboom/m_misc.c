@@ -86,20 +86,20 @@ static const char *TAG = "SaveDialog";
  * killough 9/98: rewritten to use stdio and to flash disk icon
  */
 
-boolean M_WriteFile(char const *name, char *source, int length)
+boolean M_WriteFile(char const *name, char *source, int length, int slot)
 {
 
   errno = 0;
   printf("Starting saving process\n");
   const esp_partition_t* part;
-	part=esp_partition_find_first(65, 0, NULL);
+	part=esp_partition_find_first(65, slot, NULL);
 	if (part==NULL) printf("Couldn't find save part!\n");
   else{
     I_BeginRead();                       // Disk icon on
     static char ChrLen[32];
     itoa(length, ChrLen, 10);
 
-    ESP_ERROR_CHECK(esp_partition_erase_range(part, 0, length+32));
+    ESP_ERROR_CHECK(esp_partition_erase_range(part, 0, part->size));
     ESP_ERROR_CHECK(esp_partition_write_raw(part, 0, ChrLen, sizeof(ChrLen)));
     ESP_ERROR_CHECK(esp_partition_write_raw(part, 32, source, length));
 
@@ -117,13 +117,13 @@ boolean M_WriteFile(char const *name, char *source, int length)
  * killough 9/98: rewritten to use stdio and to flash disk icon
  */
 
-int M_ReadFile(char const *name, char **buffer)
+int M_ReadFile(char const *name, char **buffer, int slot)
 {
   FILE *fp;
 
   printf("Attempting M_ReadFile %s\n", name);
   const esp_partition_t* part;
-	part=esp_partition_find_first(65, 0, NULL);
+	part=esp_partition_find_first(65, slot, NULL);
 	if (part==NULL) printf("Couldn't find save part!\n");
   else 
     {
