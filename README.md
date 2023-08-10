@@ -13,7 +13,9 @@ The screen is an LCD 2.4' SPI display, with a resolution of 320*240, and 16 bits
 
 The doom port for the esp32 was originaly created by ESPRESSIF, but i have modified it.
 
-Due to the limited storage avalable on the console, we are limited to one world at a time saved on the console.
+Due to the limited storage avalable on the console, we are limited to one world at a time loaded on the console.
+
+The saveing system has been re-worked and now work prefecty.
 
 Doom run on one core of the ESP32, the other core is reserved to the display.
 
