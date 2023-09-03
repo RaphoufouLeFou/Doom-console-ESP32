@@ -86,6 +86,7 @@
 #include "i_system.h"
 #include "r_demo.h"
 #include "r_fps.h"
+#include "esp_log.h"
 
 #define SAVEGAMESIZE  0x20000
 #define SAVESTRINGSIZE  24
@@ -297,8 +298,8 @@ void G_BuildTiccmd(ticcmd_t* cmd)
   memset(cmd,0,sizeof*cmd);
   cmd->consistancy = consistancy[consoleplayer][maketic%BACKUPTICS];
 
-  strafe = gamekeydown[key_strafe] || joybuttons[joybstrafe];
-  //strafe = 0;
+  //strafe = gamekeydown[key_strafe] || joybuttons[joybstrafe];
+  strafe = 0;
   //e6y: the "RUN" key inverts the autorun state
   speed = (gamekeydown[key_speed] || joybuttons[joybspeed] ? !autorun : autorun); // phares
 
@@ -343,56 +344,47 @@ void G_BuildTiccmd(ticcmd_t* cmd)
 
       if (gamekeydown[key_right]){
         side += sidemove[speed];
-        //printf("right slide\n");
       }
       if (gamekeydown[key_left]){
         side -= sidemove[speed];
-        //printf("left slide\n");
       }
       if (joyxmove > 0){
         cmd->angleturn -= (angleturn[tspeed]*joyxmove)/2.0f;
         forward += (forwardmove[0])/10.0f;
-        //printf("right view\n");
         }
       if (joyxmove < 0){
         cmd->angleturn += (angleturn[tspeed]*-joyxmove)/2.0f;
         forward += (forwardmove[0])/10.0f;
-        //printf("left view\n");
       }
     }
 
-  if (gamekeydown[key_up]){
+  if (gamekeydown[key_up])
     forward += forwardmove[speed];
-    //printf("forward move\n");
-    }
-  if (gamekeydown[key_down]){
-    //printf("backward move\n");
+    
+  if (gamekeydown[key_down])
     forward -= forwardmove[speed];
-    }
-  if (joyymove < 0){
-    //printf("forward move2\n");
+    
+  if (joyymove < 0)
     forward += (forwardmove[speed]*-joyymove)/2.0f;
-    }
-  if (joyymove > 0){
-    //printf("backward move2\n");
+    
+  if (joyymove > 0)
     forward -= (forwardmove[speed]*joyymove)/2.0f;
-    }
-  if (gamekeydown[key_straferight]){
-    //printf("right move\n");
+    
+  if (gamekeydown[key_straferight])
     side += sidemove[speed];
-    }
-  if (gamekeydown[key_strafeleft]){
-    //printf("left move\n");
+    
+  if (gamekeydown[key_strafeleft])
     side -= sidemove[speed];
-    }
+    
 
     // buttons
   cmd->chatchar = HU_dequeueChatChar();
 
-  if (gamekeydown[key_fire] || joybuttons[joybfire])
+  if (gamekeydown[key_fire]){
     cmd->buttons |= BT_ATTACK;
+  }
 
-  if (gamekeydown[key_use] || joybuttons[joybuse])
+  if (gamekeydown[key_use])
     {
       cmd->buttons |= BT_USE;
       // clear double clicks if hit use button
@@ -1548,9 +1540,10 @@ void G_DoLoadGame(void)
 
   gameaction = ga_nothing;
 
-  length = M_ReadFile(name, &savebuffer);
+  length = M_ReadFile(name, &savebuffer, savegameslot);
   if (length<=0)
     I_Error("Couldn't read file %s: %s", name, "(Unknown Error)");
+
   save_p = savebuffer + SAVESTRINGSIZE;
 
   // CPhipps - read the description field, compare with supported ones
@@ -1559,7 +1552,7 @@ void G_DoLoadGame(void)
     // killough 2/22/98: "proprietary" version string :-)
     sprintf (vcheck, version_headers[i].ver_printf, version_headers[i].version);
 
-    if (!strncmp(save_p, vcheck, VERSIONSIZE)) {
+    if (!strncmp((char*)save_p, vcheck, VERSIONSIZE)) {
       savegame_compatibility = version_headers[i].comp_level;
       i = num_version_headers;
     }
@@ -1572,7 +1565,6 @@ void G_DoLoadGame(void)
       return;
     }
   }
-
   save_p += VERSIONSIZE;
 
   // CPhipps - always check savegames even when forced,
@@ -1593,7 +1585,7 @@ void G_DoLoadGame(void)
         free(msg);
         return;
       } else
-  lprintf(LO_WARN, "G_DoLoadGame: Incompatible savegame\n");
+        lprintf(LO_WARN, "G_DoLoadGame: Incompatible savegame\n");
     }
     save_p += sizeof checksum;
    }
@@ -1741,8 +1733,7 @@ static void G_DoSaveGame (boolean menu)
   char name[PATH_MAX+1];
   char name2[VERSIONSIZE];
   char *description;
-  int  length, i;
-
+  int  i;
   gameaction = ga_nothing; // cph - cancel savegame at top of this function,
     // in case later problems cause a premature exit
 
@@ -1753,6 +1744,7 @@ static void G_DoSaveGame (boolean menu)
   save_p = savebuffer = malloc(savegamesize);
 
   CheckSaveGame(SAVESTRINGSIZE+VERSIONSIZE+sizeof(uint_64_t));
+  
   memcpy (save_p, description, SAVESTRINGSIZE);
   save_p += SAVESTRINGSIZE;
   memset (name2,0,sizeof(name2));
@@ -1765,7 +1757,6 @@ static void G_DoSaveGame (boolean menu)
       memcpy (save_p, name2, VERSIONSIZE);
       i = num_version_headers+1;
     }
-
   save_p += VERSIONSIZE;
 
   { /* killough 3/16/98, 12/98: store lump name checksum */
@@ -1813,12 +1804,9 @@ static void G_DoSaveGame (boolean menu)
   save_p += sizeof leveltime;
 
   /* cph - total episode time */
-  if (compatibility_level >= prboom_2_compatibility) {
-    memcpy(save_p, &totalleveltimes, sizeof totalleveltimes);
-    save_p += sizeof totalleveltimes;
-  }
-  else totalleveltimes = 0;
-
+  memcpy(save_p, &totalleveltimes, sizeof totalleveltimes);
+  save_p += sizeof totalleveltimes;
+  
   // killough 11/98: save revenant tracer state
   *save_p++ = (gametic-basetic) & 255;
 
@@ -1850,10 +1838,9 @@ static void G_DoSaveGame (boolean menu)
 
   *save_p++ = 0xe6;   // consistancy marker
 
-  length = save_p - savebuffer;
-
   Z_CheckHeap();
-  doom_printf( "%s", M_WriteFile(name, savebuffer, length)
+
+  doom_printf( "%s", M_WriteFile(name, savebuffer, save_p - savebuffer, savegameslot)
          ? s_GGSAVED /* Ty - externalised */
          : "Game save failed!"); // CPhipps - not externalised
 

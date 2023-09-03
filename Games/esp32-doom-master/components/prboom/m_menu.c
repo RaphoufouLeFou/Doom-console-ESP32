@@ -60,6 +60,9 @@
 #include "i_sound.h"
 #include "r_demo.h"
 #include "r_fps.h"
+#include "esp_err.h"
+#include "esp_partition.h"
+#include <esp_spi_flash.h>
 
 extern patchnum_t hu_font[HU_FONTSIZE];
 extern boolean  message_dontfuckwithme;
@@ -843,15 +846,16 @@ void M_ReadSaveStrings(void)
     /* killough 3/22/98
      * cph - add not-demoplayback parameter */
     G_SaveGameName(name,sizeof(name),i,false);
-    fp=NULL;
-    //fp = fopen(name,"rb");
-    if (!fp) {   // Ty 03/27/98 - externalized:
+
+    const esp_partition_t* part;
+	  part=esp_partition_find_first(65, i, NULL);
+    esp_partition_read_raw(part, 32, &savegamestrings[i], SAVESTRINGSIZE); 
+	  if (savegamestrings[i][0]==0xff)
+    {
       strcpy(&savegamestrings[i][0],s_EMPTYSTRING);
       LoadMenue[i].status = 0;
       continue;
     }
-    fread(&savegamestrings[i], SAVESTRINGSIZE, 1, fp);
-    fclose(fp);
     LoadMenue[i].status = 1;
   }
 }
@@ -875,7 +879,7 @@ void M_DrawSave(void)
   if (saveStringEnter)
     {
     i = M_StringWidth(savegamestrings[saveSlot]);
-    M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"_");
+    M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"");
     }
 }
 
@@ -892,6 +896,18 @@ static void M_DoSave(int slot)
     quickSaveSlot = slot;
 }
 
+// [FG] generate a default save slot name if the user saves to an empty slot
+static void SetDefaultSaveName (int slot)
+{
+  char *name = malloc(SAVESTRINGSIZE);
+  char *slotName = malloc(3);
+  strcpy(name, "Save ");
+  itoa(slotName, name, 10);
+  strcat(name, slotName);
+  snprintf(savegamestrings[itemOn], SAVESTRINGSIZE, "%s", name);
+  free(name);
+}
+
 //
 // User wants to save. Start string input for M_Responder
 //
@@ -903,7 +919,9 @@ void M_SaveSelect(int choice)
   saveSlot = choice;
   strcpy(saveOldString,savegamestrings[choice]);
   if (!strcmp(savegamestrings[choice],s_EMPTYSTRING)) // Ty 03/27/98 - externalized
-    savegamestrings[choice][0] = 0;
+  { 
+    SetDefaultSaveName(choice);
+  }
   saveCharIndex = strlen(savegamestrings[choice]);
 }
 
@@ -954,16 +972,17 @@ enum
 menuitem_t OptionsMenu[]=
 {
   // killough 4/6/98: move setup to be a sub-menu of OPTIONs
-  {1,"", M_General, 'g'},      // killough 10/98
-  {1,"",  M_Setup,   's'},                          // phares 3/21/98
-  {1,"", M_EndGame,'e'},
-  {1,"",  M_ChangeMessages,'m'},
-  /*    {1,"M_DETAIL",  M_ChangeDetail,'g'},  unused -- killough */
-  {2,"", M_SizeDisplay,'s'},
+  
+  {1,"M_ENDGAM", M_EndGame,'e'},
   {-1,"",0},
-  {1,"",  M_ChangeSensitivity,'m'},
-  /* {-1,"",0},  replaced with submenu -- killough */
-  {1,"",   M_Sound,'s'}
+  {1,"M_MESSG",  M_ChangeMessages,'m'},
+  /*    {1,"M_DETAIL",  M_ChangeDetail,'g'},  unused -- killough */
+  {-1,"",0},
+  {2,"M_SCRNSZ", M_SizeDisplay,'s'},
+  {-1,"",0},
+  {1,"M_SVOL",   M_Sound,'s'},
+  {-1,"",0}
+
 };
 
 menu_t OptionsDef =
@@ -989,7 +1008,7 @@ void M_DrawOptions(void)
   // proff/nicolas 09/20/98 -- changed for hi-res
   V_DrawNamePatch(108, 15, 0, "M_OPTTTL", CR_DEFAULT, VPT_STRETCH);
 
-  V_DrawNamePatch(OptionsDef.x + 120, OptionsDef.y+LINEHEIGHT*messages, 0,
+  V_DrawNamePatch(OptionsDef.x + 120, OptionsDef.y+LINEHEIGHT*2, 0,
       msgNames[showMessages], CR_DEFAULT, VPT_STRETCH);
 
   M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(scrnsize+1),
@@ -4126,11 +4145,12 @@ boolean M_Responder (event_t* ev) {
   joywait = I_GetTime() + 2;
       }
 
-    if (ev->data1&1)
+    /*if (ev->data1&1)
       {
-  ch = key_menu_enter;                             // phares 3/7/98
-  joywait = I_GetTime() + 5;
-      }
+        ch = key_menu_enter;   
+        printf("Enter is active now, %d\n", ev->data1);                          // phares 3/7/98
+        joywait = I_GetTime() + 5;
+      }*/
 
     if (ev->data1&2)
       {
@@ -4187,7 +4207,10 @@ boolean M_Responder (event_t* ev) {
       else if (ch == key_menu_escape)                    // phares 3/7/98
   {
     saveStringEnter = 0;
-    strcpy(&savegamestrings[saveSlot][0],saveOldString);
+    char *saveSlotname=NULL;
+    saveSlotname = malloc(3);
+    itoa(saveSlot, saveSlotname, 10);
+    strcpy(&savegamestrings[saveSlot][0], saveSlotname);
   }
 
       else if (ch == key_menu_enter)                     // phares 3/7/98
@@ -4195,6 +4218,13 @@ boolean M_Responder (event_t* ev) {
     saveStringEnter = 0;
     if (savegamestrings[saveSlot][0])
       M_DoSave(saveSlot);
+    else {
+      char *saveSlotname=NULL;
+      saveSlotname = malloc(3);
+      itoa(saveSlot, saveSlotname, 10);
+      strcpy(&savegamestrings[saveSlot][0], saveSlotname);
+      M_DoSave(saveSlot);
+    }
   }
 
       else
@@ -4321,7 +4351,7 @@ boolean M_Responder (event_t* ev) {
       {
       usegamma++;
       if (usegamma > 4)
-  usegamma = 0;
+  usegamma = 4;
       players[consoleplayer].message =
   usegamma == 0 ? s_GAMMALVL0 :
   usegamma == 1 ? s_GAMMALVL1 :
@@ -4430,6 +4460,7 @@ boolean M_Responder (event_t* ev) {
   if (ptr1->m_flags & S_YESNO) // yes or no setting?
     {
     if (ch == key_menu_enter) {
+      printf("Enter 1\n");
       *ptr1->var.def->location.pi = !*ptr1->var.def->location.pi; // killough 8/15/98
 
       // phares 4/14/98:
@@ -4476,6 +4507,7 @@ boolean M_Responder (event_t* ev) {
          * value is entered).
          */
         if (ch == key_menu_enter) {
+          printf("Enter 2\n");
     if (gather_count) {     // Any input?
       int value;
 
@@ -4584,6 +4616,7 @@ boolean M_Responder (event_t* ev) {
       }
     }
     if (ch == key_menu_enter) {
+      printf("Enter 3\n");
       // phares 4/14/98:
       // If not in demoplayback, demorecording, or netgame,
       // and there's a second variable in var2, set that
@@ -4801,6 +4834,7 @@ boolean M_Responder (event_t* ev) {
 
       if (ch == key_menu_enter)
         {
+          printf("Enter 4\n");
     *ptr1->var.def->location.pi = color_palette_x + 16*color_palette_y;
     M_SelectDone(ptr1);                         // phares 4/17/98
     colorbox_active = false;
@@ -4840,6 +4874,7 @@ boolean M_Responder (event_t* ev) {
         else if ((ch == key_menu_enter) ||
            (ch == key_menu_escape))
     {
+      printf("Enter 5 sus\n");
       *ptr1->var.def->location.ppsz = chat_string_buffer;
       M_SelectDone(ptr1);   // phares 4/17/98
     }
@@ -4910,6 +4945,7 @@ boolean M_Responder (event_t* ev) {
       if (ch == key_menu_enter)
   {
     int flags = ptr1->m_flags;
+    printf("Enter 6\n");
 
     // You've selected an item to change. Highlight it, post a new
     // message about what to do, and get ready to process the
@@ -5101,26 +5137,27 @@ boolean M_Responder (event_t* ev) {
     }
 
   if (ch == key_menu_enter)                            // phares 3/7/98
-    {
-      if (currentMenu->menuitems[itemOn].routine &&
-    currentMenu->menuitems[itemOn].status)
   {
-    currentMenu->lastOn = itemOn;
-    if (currentMenu->menuitems[itemOn].status == 2)
+    printf("Enter 7\n");
+    if (currentMenu->menuitems[itemOn].routine &&
+      currentMenu->menuitems[itemOn].status)
+    {
+      currentMenu->lastOn = itemOn;
+      if (currentMenu->menuitems[itemOn].status == 2)
       {
         currentMenu->menuitems[itemOn].routine(1);   // right arrow
         S_StartSound(NULL,sfx_stnmov);
       }
-    else
+      else
       {
         currentMenu->menuitems[itemOn].routine(itemOn);
         S_StartSound(NULL,sfx_pistol);
       }
-  }
+    }
       //jff 3/24/98 remember last skill selected
       // killough 10/98 moved to skill-specific functions
       return true;
-    }
+  }
 
   if (ch == key_menu_escape)                           // phares 3/7/98
     {

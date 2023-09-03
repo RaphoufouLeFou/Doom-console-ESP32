@@ -364,9 +364,9 @@ static int getFreeHandle() {
 	}
 	
 	if (mmapHandle[nextHandle].addr) {
-		//spi_flash_munmap(mmapHandle[nextHandle].handle);
+		spi_flash_munmap(mmapHandle[nextHandle].handle);
 		
-		free(mmapHandle[nextHandle].addr);
+		//free(mmapHandle[nextHandle].addr);
 		
 		mmapHandle[nextHandle].addr=NULL;
 		

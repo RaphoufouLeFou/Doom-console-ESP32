@@ -9,7 +9,7 @@
 /* #undef CHECKHEAP */
 
 /* Define for support for MBF helper dogs */
-//#define DOGS 0
+#define DOGS 1
 
 
 #define HAVE_STRLWR 1
@@ -65,7 +65,7 @@
 #define HAVE_MMAP 1
 
 /* Define if you want network game support */
-#undef HAVE_NET 
+#define HAVE_NET 
 
 /* Define to 1 if you have the <sched.h> header file. */
 #define HAVE_SCHED_H 0
@@ -121,7 +121,7 @@
 
 /* Define this to see real-time memory allocation statistics, and enable extra
    debugging features */
-/* #undef INSTRUMENTED */
+//#define INSTRUMENTED 
 
 /* If your platform has a fast version of max, define MAX to it */
 /* #undef MAX */
@@ -178,7 +178,7 @@
 #define USE_GLU_MIPMAP 0
 
 /* Define if you want to use the SDL net lib */
-/* #undef USE_SDL_NET */
+//#define USE_SDL_NET 
 
 /* Version number of package */
 #define VERSION "2.6.0"

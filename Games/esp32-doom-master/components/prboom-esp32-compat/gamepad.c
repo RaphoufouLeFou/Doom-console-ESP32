@@ -178,26 +178,22 @@ void gamepadPoll(void)
 	
 	ev.data3=0;
 	ev.data2=0;
-	//joyValY=0;
-	//joyValX=0;
-	//joyValnumY=0;
-	//joyValnumX=0;
-
+	//printf("[APP] Free memory: %f Mb\n", (esp_get_free_heap_size())/1000000.0f);
 	event_t evButton;
-
 	if (gpio_get_level(GPIO_NUM_18)!=GpioVal0) {
 		evButton.type=!gpio_get_level(GPIO_NUM_18)?ev_keyup:ev_keydown;
 		evButton.data1=key_fire;
 		GpioVal0=gpio_get_level(GPIO_NUM_18);
-		printf("18 is now %d\n", GpioVal0);
+		//printf("18 is now %d\n", GpioVal0);
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_18)) GpioVal0=0;
 
 	if (gpio_get_level(GPIO_NUM_8)!=GpioVal1) {
 		evButton.type=!gpio_get_level(GPIO_NUM_8)?ev_keyup:ev_keydown;
 		evButton.data1=key_weapontoggle;
+		
 		GpioVal1=gpio_get_level(GPIO_NUM_8);
-		printf("8 is now %d\n", GpioVal1);
+		//printf("8 is now %d\n", GpioVal1);
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_8)) GpioVal1=0;
 
@@ -205,7 +201,7 @@ void gamepadPoll(void)
 		evButton.type=!gpio_get_level(GPIO_NUM_7)?ev_keyup:ev_keydown;
 		evButton.data1=key_left;
 		GpioVal2=gpio_get_level(GPIO_NUM_7);
-		printf("9 is now %d\n", GpioVal2);
+		//printf("9 is now %d\n", GpioVal2);
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_7)) GpioVal2=0;
 		
@@ -213,7 +209,7 @@ void gamepadPoll(void)
 		evButton.type=!gpio_get_level(GPIO_NUM_1)?ev_keyup:ev_keydown;
 		evButton.data1=key_right;
 		GpioVal3=gpio_get_level(GPIO_NUM_1);
-		printf("1 is now %d\n", GpioVal3);
+		//printf("1 is now %d\n", GpioVal3);
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_1)) GpioVal3=0;
 			
@@ -222,7 +218,7 @@ void gamepadPoll(void)
 		evButton.type=gpio_get_level(GPIO_NUM_4)?ev_keyup:ev_keydown;
 		evButton.data1=key_autorun;
 		GpioVal4=gpio_get_level(GPIO_NUM_4);
-		printf("4 is now %d\n", GpioVal4);
+		//printf("4 is now %d\n", GpioVal4);
 		D_PostEvent(&evButton);
 	}else if(gpio_get_level(GPIO_NUM_4)) GpioVal4=1;
 		
@@ -230,7 +226,7 @@ void gamepadPoll(void)
 		evButton.type=!gpio_get_level(GPIO_NUM_16)?ev_keyup:ev_keydown;
 		evButton.data1=key_escape;
 		GpioVal5=gpio_get_level(GPIO_NUM_16);
-		printf("16 is now %d\n", GpioVal5);
+		//printf("16 is now %d\n", GpioVal5);
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_16)){
 		GpioVal5=0;
@@ -240,7 +236,7 @@ void gamepadPoll(void)
 		evButton.type=!gpio_get_level(GPIO_NUM_15)?ev_keyup:ev_keydown;
 		evButton.data1=key_use;
 		GpioVal6=gpio_get_level(GPIO_NUM_15);
-		printf("15 is now %d\n", GpioVal6);
+		//printf("15 is now %d\n", GpioVal6);
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_15)) GpioVal6=0;
 		
@@ -251,7 +247,13 @@ void gamepadPoll(void)
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_18)) GpioVal7=0;
 
-
+		if (gpio_get_level(GPIO_NUM_15)!=GpioVal6) {
+		evButton.type=!gpio_get_level(GPIO_NUM_15)?ev_keyup:ev_keydown;
+		evButton.data1='y';
+		GpioVal6=gpio_get_level(GPIO_NUM_15);
+		//printf("15 is now %d\n", GpioVal6);
+		D_PostEvent(&evButton);
+	}else if(!gpio_get_level(GPIO_NUM_15)) GpioVal6=0;
 }
 
 

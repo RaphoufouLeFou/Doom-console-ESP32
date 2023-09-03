@@ -9,7 +9,7 @@
 /* #undef CHECKHEAP */
 
 /* Define for support for MBF helper dogs */
-//#define DOGS 0
+#define DOGS 1
 
 
 #define HAVE_STRLWR 1

@@ -94,38 +94,65 @@ doomcom_t*      doomcom;
 #endif
 
 #ifdef HAVE_NET
+
+size_t I_GetPacket(packet_header_t* buffer, size_t buflen)
+{
+  printf("GetPacket\n");
+  return 0;
+}
+
+void I_SendPacket(packet_header_t* packet, size_t len)
+{
+  printf("I_SendPacket\n");
+}
+void I_InitNetwork(void)
+{
+  printf("init network\n");
+}
+
+void I_WaitForPacket(int ms)
+{
+  printf("WaitForPacket for : %d ms\n", ms);
+}
+
+
 void D_InitNetGame (void)
 {
   int i;
   int numplayers = 1;
-
   i = M_CheckParm("-net");
+  printf("Starting... with %d and %d, and netgame is %d, %d\n", i, myargc, netgame, server);
   if (i && i < myargc-1) i++;
-
+  
   if (!(netgame = server =  !!i)) {
     playeringame[consoleplayer = 0] = true;
+    
     // e6y
     // for play, recording or playback using "single-player coop" mode.
     // Equivalent to using prboom_server with -N 1
     netgame = M_CheckParm("-solo-net");
+
+    printf("YES %d\n", netgame);
   } else {
+    printf("NO\n");
     // Get game info from server
     packet_header_t *packet = Z_Malloc(1000, PU_STATIC, NULL);
     struct setup_packet_s *sinfo = (void*)(packet+1);
   struct { packet_header_t head; short pn; } PACKEDATTR initpacket;
 
     I_InitNetwork();
-  udp_socket = I_Socket(0);
-  I_ConnectToServer(myargv[i]);
+  //dp_socket = I_Socket(0);
+  //_ConnectToServer(myargv[i]);
 
     do
     {
       do { 
-	// Send init packet
-	initpacket.pn = doom_htons(wanted_player_number);
-	packet_set(&initpacket.head, PKT_INIT, 0);
-	I_SendPacket(&initpacket.head, sizeof(initpacket));
-	I_WaitForPacket(5000);
+	      // Send init packet
+	      initpacket.pn = doom_htons(wanted_player_number);
+	      packet_set(&initpacket.head, PKT_INIT, 0);
+	      I_SendPacket(&initpacket.head, sizeof(initpacket));
+        printf("init packet sent\n");
+	      I_WaitForPacket(5000);
       } while (!I_GetPacket(packet, 1000));
       if (packet->type == PKT_DOWN) I_Error("Server aborted the game");
     } while (packet->type != PKT_SETUP);

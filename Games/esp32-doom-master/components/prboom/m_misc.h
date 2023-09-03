@@ -42,9 +42,9 @@
 // MISC
 //
 
-boolean M_WriteFile (char const* name,void* source,int length);
+boolean M_WriteFile (char const* name,char* source,int length,int slot);
 
-int M_ReadFile (char const* name,byte** buffer);
+int M_ReadFile (char const* name,char** buffer,int slot);
 
 void M_ScreenShot (void);
 void M_DoScreenShot (const char*); // cph

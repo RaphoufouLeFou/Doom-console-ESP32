@@ -46,92 +46,11 @@
 #include <fcntl.h>
 #include <string.h>
 
-#ifdef HAVE_NET
-
 
 #include "protocol.h"
 #include "i_network.h"
 #include "lprintf.h"
-
-void I_ShutdownNetwork(void)
-{
-}
-
-void I_InitNetwork(void)
-{
-}
-
-UDP_PACKET *I_AllocPacket(int size)
-{
-}
-
-void I_FreePacket(UDP_PACKET *packet)
-{
-}
-
-void I_WaitForPacket(int ms)
-{
-}
-
-int I_ConnectToServer(const char *serv)
-{
-  return 0;
-}
-
-void I_Disconnect(void)
-{
-}
-
-UDP_SOCKET I_Socket(Uint16 port)
-{
-}
-
-void I_CloseSocket(UDP_SOCKET sock)
-{
-}
-
-UDP_CHANNEL I_RegisterPlayer(IPaddress *ipaddr)
-{
-}
-
-void I_UnRegisterPlayer(UDP_CHANNEL channel)
-{
-}
-
-/*
- * ChecksumPacket
- *
- * Returns the checksum of a given network packet
+/* cph -
+ * Each client will either use the IPv4 socket or the IPv6 socket
+ * Each server will use whichever or both that are available
  */
-static byte ChecksumPacket(const packet_header_t* buffer, size_t len)
-{
-  const byte* p = (const void*)buffer;
-  byte sum = 0;
-
-  if (len==0)
-    return 0;
-
-  while (p++, --len)
-    sum += *p;
-
-  return sum;
-}
-
-size_t I_GetPacket(packet_header_t* buffer, size_t buflen)
-{
-  return 0;
-}
-
-void I_SendPacket(packet_header_t* packet, size_t len)
-{
-}
-
-void I_SendPacketTo(packet_header_t* packet, size_t len, UDP_CHANNEL *to)
-{
-}
-
-void I_PrintAddress(FILE* fp, UDP_CHANNEL *addr)
-{
-}
-
-#endif /* HAVE_NET */

@@ -16,6 +16,8 @@ idf_component_register(SRCS
  PRIV_REQUIRES spiffs vfs fatfs prboom mcp23x17 prboom-wad-tables
  REQUIRES spi_flash
  REQUIRES esp_timer
+ REQUIRES esp_wifi
+ REQUIRES nvs_flash
  REQUIRES esp_adc)
 
 

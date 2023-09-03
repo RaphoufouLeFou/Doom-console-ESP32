@@ -4879,23 +4879,23 @@ const mobjinfo_t const romobjinfo[NUMMOBJTYPES] = {
     S_DOGS_STND,    // spawnstate
     500,    // spawnhealth
     S_DOGS_RUN1,    // seestate
-    sfx_dgsit,   // seesound
+    sfx_None,   // seesound
     8,    // reactiontime
-    sfx_dgatk,   // attacksound
+    sfx_None,   // attacksound
     S_DOGS_PAIN,    // painstate
     180,    // painchance
-    sfx_dgpain,   // painsound
+    sfx_None,   // painsound
     S_DOGS_ATK1,    // meleestate
     0,    // missilestate
     S_DOGS_DIE1,    // deathstate
     S_NULL,   // xdeathstate
-    sfx_dgdth,   // deathsound
+    sfx_None,   // deathsound
     10,   // speed
     12*FRACUNIT,    // radius
     28*FRACUNIT,    // height
     100,    // mass
     0,    // damage
-    sfx_dgact,    // activesound
+    sfx_None,    // activesound
     MF_SOLID|MF_SHOOTABLE|MF_COUNTKILL, // flags
     S_DOGS_RAISE1   // raisestate
   },

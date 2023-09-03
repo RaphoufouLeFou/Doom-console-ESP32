@@ -22,6 +22,24 @@
 #include "driver/spi_master.h"
 #include "soc/gpio_struct.h"
 #include "driver/gpio.h"
+
+
+#include <sys/param.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "esp_wifi.h"
+#include "esp_event.h"
+#include "esp_log.h"
+#include "nvs_flash.h"
+#include "esp_netif.h"
+
+#include "lwip/err.h"
+#include "lwip/sockets.h"
+#include "lwip/sys.h"
+#include <lwip/netdb.h>
+
+
 //#include "esp_heap_alloc_caps.h"
 
 #include "sdkconfig.h"
@@ -61,7 +79,7 @@ typedef struct {
 #if (CONFIG_HW_LCD_TYPE == 1)
 
 static const ili_init_cmd_t ili_init_cmds[]={
-    {0x36, {(1<<5)|(1<<6)}, 1},
+    //{0x36, {20}, 1},
     {0x3A, {0x55}, 1},
     {0xB2, {0x0c, 0x0c, 0x00, 0x33, 0x33}, 5},
     {0xB7, {0x45}, 1},
@@ -74,7 +92,7 @@ static const ili_init_cmd_t ili_init_cmds[]={
     {0xD0, {0xA4, 0xA1}, 1},
     {0xE0, {0xD0, 0x00, 0x05, 0x0E, 0x15, 0x0D, 0x37, 0x43, 0x47, 0x09, 0x15, 0x12, 0x16, 0x19}, 14},
     {0xE1, {0xD0, 0x00, 0x05, 0x0D, 0x0C, 0x06, 0x2D, 0x44, 0x40, 0x0E, 0x1C, 0x18, 0x16, 0x19}, 14},
-//    {0x36, {0x10}, 1},
+    {0x36, {0x64}, 1},
     {0x11, {0}, 0x80},
     {0x29, {0}, 0x80},
     {0, {0}, 0xff}
@@ -308,7 +326,7 @@ void IRAM_ATTR displayTask(void *arg) {
         .max_transfer_sz=(MEM_PER_TRANS*2)+16
     };
     spi_device_interface_config_t devcfg={
-        .clock_speed_hz=60000000,               //Clock out at 60 MHz. Yes, that's heavily overclocked.
+        .clock_speed_hz=60000000,               //Clock out at 80 MHz. Yes, that's heavily overclocked.
         .mode=0,                                //SPI mode 0
         .spics_io_num=PIN_NUM_CS,               //CS pin
         .queue_size=NO_SIM_TRANS,               //We want to be able to queue this many transfers
