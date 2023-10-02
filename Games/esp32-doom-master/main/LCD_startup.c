@@ -88,7 +88,7 @@ spi_device_handle_t spi;
 //Place data into DRAM. Constant data gets placed into DROM by default, which is not accessible by DMA.
 DRAM_ATTR static const lcd_init_cmd_t st_init_cmds[]={
     /* Memory Data Access Control, MX=MV=1, MY=ML=MH=0, RGB=0 */
-    {0x36, {(1<<5)|(1<<6)}, 1},
+    {0x36, {0x00}, 1},
     /* Interface Pixel Format, 16bits/pixel for RGB/MCU interface */
     {0x3A, {0x55}, 1},
     /* Porch Setting */
@@ -289,7 +289,7 @@ void lcd_init(spi_device_handle_t spi)
     int lcd_type = 0;
 
     printf("LCD ID: %08"PRIx32"\n", lcd_id);
-    if ( lcd_id == 0 ) {
+    if ( lcd_id == 1 ) {
         //zero, ili
         lcd_detected_type = LCD_TYPE_ILI;
         printf("ILI9341 detected.\n");

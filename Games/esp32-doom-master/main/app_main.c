@@ -28,6 +28,7 @@
 #include "soc/rtc_cntl_reg.h"
 #include <stdio.h>
 #include "driver/gpio.h"
+#include "driver/spi_master.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <stdlib.h>
@@ -36,6 +37,12 @@
 #include "esp_partition.h"
 #include <esp_spi_flash.h>
 #include <string.h>
+#include <esp_flash.h>
+#include <esp_flash_spi_init.h>
+#include <sys/unistd.h>
+#include <sys/stat.h>
+#include "esp_vfs_fat.h"
+#include "sdmmc_cmd.h"
 
 #include "Render.h"
 #include "Front.h"
@@ -48,10 +55,18 @@
 #include "spi_lcd.h"
 #include "LCD_startup.h"
 
+#define EXAMPLE_MAX_CHAR_SIZE    64
+
+static const char *TAG = "example";
+
+#define MOUNT_POINT "/sdcard"
+
+
 extern void display_buff_ext(uint16_t *buffer);
 extern void jsInit();
 extern void M_DrawString();
 
+static spi_flash_host_inst_t spi;
 
 void doomEngineTask(void *pvParameters)
 {
@@ -67,9 +82,10 @@ void StartDoom(int net){
 	
 	jsInit();
 
-	
 	const esp_partition_t* part;
 	part=esp_partition_find_first(66, 6, NULL);
+
+
 	if (part==0) printf("Couldn't find wad part!\n");
 
 	xTaskCreatePinnedToCore(&doomEngineTask, "doomEngine", 22480, net, 5, NULL, 0);
@@ -78,7 +94,7 @@ void StartDoom(int net){
 void DisplayText(char * text, int x, int y, uint16_t *FrameBuffer, int size){
 	
 	for (int i=0; i<size; i++){
-		printf("size : %d\n", size);
+		//printf("size : %d\n", size);
 		for(int j=0; j<14; j++){
 			for(int k=0; k<10; k++){
 				if(text[i] == 'A'){
@@ -189,6 +205,8 @@ int ListenInput(){
 
 void app_main()
 {
+
+	
 	spi_main();
 	//StartDoom();
 	
