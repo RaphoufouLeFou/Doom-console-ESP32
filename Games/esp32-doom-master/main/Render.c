@@ -171,23 +171,23 @@ int FacesConTable[6][4] = {
         0-------1-  -  -  -  -  4-------5
 */
 
-// Fonction auxiliaire pour calculer l'aire d'un triangle form� par trois points
+// Fonction auxiliaire pour calculer l'aire d'un triangle forme par trois points
 // Auxiliary function to calculate the area of ??a triangle formed by three points
 int calculate_area(int x1, int y1, int x2, int y2, int x3, int y3) {
     return (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
 }
 
-// Fonction auxiliaire pour v�rifier si un point (x, y) est � l'int�rieur du carr�
+// Fonction auxiliaire pour verifier si un point (x, y) est e l'interieur du carre
 // Auxiliary function to check if a point (x,y) is inside the square
 int is_point_inside_square(int x, int y, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
-    // Utiliser l'algorithme du produit vectoriel pour v�rifier si le point est � l'int�rieur du triangle form� par les sommets du carr�
+    // Utiliser l'algorithme du produit vectoriel pour verifier si le point est a l'interieur du triangle forme par les sommets du carre
     // Use the cross product algorithm to check if the point is inside the triangle formed by the vertices of the square
     int area1 = calculate_area(x, y, x1, y1, x2, y2);
     int area2 = calculate_area(x, y, x2, y2, x3, y3);
     int area3 = calculate_area(x, y, x3, y3, x4, y4);
     int area4 = calculate_area(x, y, x4, y4, x1, y1);
 
-    // Le point est � l'int�rieur du carr� si les aires des triangles sont toutes positives
+    // Le point est a l'interieur du carre si les aires des triangles sont toutes positives
     // The point is inside the square if the areas of the triangles are all positive
     return (area1 >= 0 && area2 >= 0 && area3 >= 0 && area4 >= 0);
 }
@@ -790,23 +790,23 @@ void Start_Render_test(void)
 
     // initialize the joystick and buttons pins
     gpio_set_direction(GPIO_NUM_15, GPIO_MODE_INPUT);
-	gpio_set_direction(GPIO_NUM_16, GPIO_MODE_INPUT);
-	gpio_set_direction(GPIO_NUM_5, GPIO_MODE_INPUT); 
-	gpio_set_direction(GPIO_NUM_6, GPIO_MODE_INPUT); 
-	gpio_set_direction(GPIO_NUM_4, GPIO_MODE_INPUT); 
-	gpio_set_direction(GPIO_NUM_7, GPIO_MODE_INPUT); 
-	gpio_set_direction(GPIO_NUM_1, GPIO_MODE_INPUT); 
-	gpio_set_direction(GPIO_NUM_8, GPIO_MODE_INPUT); 
-	gpio_set_direction(GPIO_NUM_18, GPIO_MODE_INPUT);
+    gpio_set_direction(GPIO_NUM_16, GPIO_MODE_INPUT);
+    gpio_set_direction(GPIO_NUM_5, GPIO_MODE_INPUT); 
+    gpio_set_direction(GPIO_NUM_6, GPIO_MODE_INPUT); 
+    gpio_set_direction(GPIO_NUM_4, GPIO_MODE_INPUT); 
+    gpio_set_direction(GPIO_NUM_7, GPIO_MODE_INPUT); 
+    gpio_set_direction(GPIO_NUM_1, GPIO_MODE_INPUT); 
+    gpio_set_direction(GPIO_NUM_8, GPIO_MODE_INPUT); 
+    gpio_set_direction(GPIO_NUM_18, GPIO_MODE_INPUT);
 
 
-	adc1_config_channel_atten( ADC1_CHANNEL_5, ADC_ATTEN_DB_11 );
-	adc1_config_channel_atten( ADC1_CHANNEL_4, ADC_ATTEN_DB_11 );
-	adc1_config_width(ADC_WIDTH_BIT_12);
+    adc1_config_channel_atten( ADC1_CHANNEL_5, ADC_ATTEN_DB_11 );
+    adc1_config_channel_atten( ADC1_CHANNEL_4, ADC_ATTEN_DB_11 );
+    adc1_config_width(ADC_WIDTH_BIT_12);
     ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_12));
     ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11));
     ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11));
-	adc1_chars = (esp_adc_cal_characteristics_t *)malloc(sizeof(esp_adc_cal_characteristics_t));
+    adc1_chars = (esp_adc_cal_characteristics_t *)malloc(sizeof(esp_adc_cal_characteristics_t));
 
     Main_queue = xQueueCreate(1,320*240*sizeof(uint16_t));
 
