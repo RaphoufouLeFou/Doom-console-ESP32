@@ -288,14 +288,12 @@ void draw_square(uint16_t color, int x1, int y1, int x2, int y2, int x3, int y3,
                         // G2, G1, G0, B4, B3, B2, B1, B0, R4, R3, R2, R1, R0, G5, G4, G3
                         // beacause the screen use a different color format
 
-                        uint16_t r = (texture_dirt[_x][_y] & 0b1111100000000000) >> 8;
-                        uint16_t gH = (texture_dirt[_x][_y] & 0b0000000011100000) << 8;
-                        uint16_t gL = (texture_dirt[_x][_y] & 0b0000011100000000) >> 8; 
-                        uint16_t b = (texture_dirt[_x][_y] & 0b0000000000011111) << 8 ;
+                        uint16_t L = (texture_dirt[_x][_y] >> 8;
+                        uint16_t H = (texture_dirt[_x][_y] << 8 ;
 
                         // send the pixel to the buffer
 
-                        buffer[(y * WIDTH + x)] =  r | gL | gH | b;
+                        buffer[(y * WIDTH + x)] =  L | H;
 
                         // mark the pixel as drawn, so the same pixel of cube behind this one will not be calculated for optimization
 
