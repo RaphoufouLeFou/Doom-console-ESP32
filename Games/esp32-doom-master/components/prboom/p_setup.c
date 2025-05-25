@@ -531,6 +531,7 @@ static void P_LoadSectors (int lump)
       ss->iSectorID=i; // proff 04/05/2000: needed for OpenGL
       ss->floorheight = SHORT(ms->floorheight)<<FRACBITS;
       ss->ceilingheight = SHORT(ms->ceilingheight)<<FRACBITS;
+      printf ("sector %d: floor %s, ceiling %s\n", i, ms->floorpic, ms->ceilingpic);
       ss->floorpic = R_FlatNumForName(ms->floorpic);
       ss->ceilingpic = R_FlatNumForName(ms->ceilingpic);
       ss->lightlevel = SHORT(ms->lightlevel);

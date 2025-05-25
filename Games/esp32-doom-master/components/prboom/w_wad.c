@@ -139,7 +139,9 @@ static void W_AddFile(wadfile_info_t *wadfile)
   filelump_t  singleinfo;
 
   // open the file and add to directory
-
+  if(strcmp( wadfile->name, "doom1-cut.wad") == 0)
+  {
+  lprintf (LO_INFO," adding lol %s\n",wadfile->name);
   wadfile->handle = I_Open(wadfile->name,O_RDONLY | O_BINARY);
 
 
@@ -155,7 +157,7 @@ static void W_AddFile(wadfile_info_t *wadfile)
 	         (strcasecmp(wadfile->name+strlen(wadfile->name)-4 , ".lmp" ) &&
 	          strcasecmp(wadfile->name+strlen(wadfile->name)-4 , ".gwa" ) )
          )
-	I_Error("W_AddFile: couldn't open %s",wadfile->name);
+	    I_Error("W_AddFile: couldn't open %s",wadfile->name);
       return;
     }
 
@@ -183,11 +185,14 @@ static void W_AddFile(wadfile_info_t *wadfile)
       I_Read(wadfile->handle, &header, sizeof(header));
       if (strncmp(header.identification,"IWAD",4) &&
           strncmp(header.identification,"PWAD",4))
-        I_Error("W_AddFile: Wad file %s doesn't have IWAD or PWAD id", wadfile->name);
+      I_Error("W_AddFile: Wad file %s doesn't have IWAD or PWAD id", wadfile->name);
       header.numlumps = LONG(header.numlumps);
       header.infotableofs = LONG(header.infotableofs);
-      length = header.numlumps*sizeof(filelump_t);
-      fileinfo2free = fileinfo = malloc(length);    // killough
+      int temp = header.numlumps;
+      length = header.numlumps * sizeof(filelump_t);
+      
+      printf("ttteteeeeeesssss--ssstttttttttttttt-----------------t111111t., %x, %x, %x\n", header.numlumps, header.infotableofs, (int)header.identification[0]);
+      fileinfo2free = fileinfo = malloc(length);    // killoug
       I_Lseek(wadfile->handle, header.infotableofs, SEEK_SET);
       I_Read(wadfile->handle, fileinfo, length);
       numlumps += header.numlumps;
@@ -211,6 +216,7 @@ static void W_AddFile(wadfile_info_t *wadfile)
       }
 
     free(fileinfo2free);      // killough
+    }
 }
 
 // jff 1/23/98 Create routines to reorder the master directory
@@ -320,12 +326,11 @@ unsigned W_LumpNameHash(const char *s)
 // killough 4/17/98: add namespace parameter to prevent collisions
 // between different resources such as flats, sprites, colormaps
 //
-
 int (W_CheckNumForName)(register const char *name, register int li_namespace)
 {
   // Hash function maps the name to one of possibly numlump chains.
   // It has been tuned so that the average chain length never exceeds 2.
-
+  
   // proff 2001/09/07 - check numlumps==0, this happens when called before WAD loaded
   register int i = (numlumps==0)?(-1):(lumpinfo[W_LumpNameHash(name) % (unsigned) numlumps].index);
 

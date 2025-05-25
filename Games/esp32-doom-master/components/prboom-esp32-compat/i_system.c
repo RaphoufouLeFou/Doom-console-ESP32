@@ -69,26 +69,13 @@
 #include "i_system.h"
 #include "i_joy.h"
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "driver/i2s.h"
-
-#include "esp_partition.h"
-#include "esp_spi_flash.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <sys/unistd.h>
 #include <sys/stat.h>
-#include "esp_err.h"
-#include "esp_log.h"
-#include "esp_vfs_fat.h"
-#include "driver/sdmmc_host.h"
-#include "driver/sdspi_host.h"
-#include "sdmmc_cmd.h"
-// #include "dma.h"
-#include "esp_timer.h"
 
+
+// #include "dma.h"
 #ifdef __GNUG__
 #pragma implementation "i_system.h"
 #endif
@@ -128,16 +115,16 @@ int realtime=0;
 
 void I_uSleep(unsigned long usecs)
 {
-	vTaskDelay(usecs/1000);
+	//vTaskDelay(usecs/1000);
 }
 
 static unsigned long getMsTicks() {
   //struct timeval tv;
   //struct timezone tz;
-  unsigned long thistimereply;
+  //unsigned long thistimereply;
 
   //gettimeofday(&tv, &tz);
-  unsigned long now = esp_timer_get_time() / 1000;
+  //unsigned long now = esp_timer_get_time() / 1000;
   //convert to ms
   //unsigned long now = tv.tv_usec/1000+tv.tv_sec*1000;
   return now;
@@ -146,7 +133,7 @@ static unsigned long getMsTicks() {
 int I_GetTime_RealTime (void)
 {
   unsigned long thistimereply;
-  thistimereply = ((esp_timer_get_time() * TICRATE) / 1000000);
+  //thistimereply = ((esp_timer_get_time() * TICRATE) / 1000000);
   return thistimereply;
 
 }
@@ -202,7 +189,7 @@ const char* I_SigString(char* buf, size_t sz, int signum)
 }
 
 extern unsigned char *doom1waddata;
-static bool init_SD = false;
+//static bool init_SD = false;
 
 static const char *TAG = "sdcard";
 
@@ -284,7 +271,7 @@ void Init_SD()
 
 typedef struct {
 	//const esp_partition_t* part;
-	const esp_partition_t* part;
+	//const esp_partition_t* part;
 	FILE* file;
 	int offset;
 	int size;
@@ -295,11 +282,11 @@ static FileDesc fds[32];
 
 int I_Open(const char *wad, int flags) {
 	int x=3;
-	while (fds[x].part!=NULL) x++;
+	//while (fds[x].part!=NULL) x++;
 	if (strcmp(wad, "doom1-cut.wad")==0) {
-		fds[x].part=esp_partition_find_first(66, 6, NULL);
+		//fds[x].part=esp_partition_find_first(66, 6, NULL);
 		fds[x].offset=0;
-		fds[x].size=fds[x].part->size;
+		//fds[x].size=fds[x].part->size;
 	} else {
 		lprintf(LO_INFO, "I_Open: open %s failed\n", wad);
 		return -1;
@@ -309,6 +296,7 @@ int I_Open(const char *wad, int flags) {
 
 
 int I_Lseek(int ifd, off_t offset, int whence) {
+	printf("I_Lseek: ifd %d, offset %d, whence %d----------------------------------584848448zq4fqfsfsq\n", ifd, (int)offset, whence);
 	if (whence==SEEK_SET) {
 		fds[ifd].offset=offset;
 	} else if (whence==SEEK_CUR) {
@@ -334,7 +322,7 @@ void I_Close(int fd) {
 
 
 typedef struct {
-	spi_flash_mmap_handle_t handle;
+	//spi_flash_mmap_handle_t handle;
 	int ifd;
 	void *addr;
 	int offset;
@@ -364,7 +352,7 @@ static int getFreeHandle() {
 	}
 	
 	if (mmapHandle[nextHandle].addr) {
-		spi_flash_munmap(mmapHandle[nextHandle].handle);
+		//spi_flash_munmap(mmapHandle[nextHandle].handle);
 		
 		//free(mmapHandle[nextHandle].addr);
 		
@@ -395,9 +383,9 @@ void freeUnusedMmaps(void) {
 }
 
 void *I_Mmap(void *addr, size_t length, int prot, int flags, int ifd, off_t offset) {
-	//lprintf(LO_INFO, "I_Mmap: ifd %d, length: %d, offset: %d\n", ifd, (int)length, (int)offset);
+	lprintf(LO_INFO, "I_Mmap: ifd %d, length: %d, offset: %d\n", ifd, (int)length, (int)offset);
 	int i;
-	esp_err_t err;
+	//esp_err_t err;
 	void *retaddr=NULL;
 
 	for (i=0; i<NO_MMAP_HANDLES; i++) {
@@ -406,25 +394,31 @@ void *I_Mmap(void *addr, size_t length, int prot, int flags, int ifd, off_t offs
 			return mmapHandle[i].addr;
 		}
 	}
-	//printf("test-------------------------------------------------------------------------------******************\n");
 	i=getFreeHandle();
+	//printf("test-------------------------------------------------------------------------------******************\n");
+
+	//lprintf(LO_INFO, "I_Mmap: mmaping offset 0x%x size 0x%x handle %d Part 0x%lx\n", (int)offset, (int)length, i, fds[ifd].part->size);
+	//err=esp_partition_mmap(fds[ifd].part, offset, length, SPI_FLASH_MMAP_DATA, (const void**)&retaddr, &mmapHandle[i].handle);
 	//printf("test2-------------------------------------------------------------------------------******************\n");
-	//lprintf(LO_INFO, "I_Mmap: mmaping offset %d size %d handle %d\n", (int)offset, (int)length, i);
-	err=esp_partition_mmap(fds[ifd].part, offset, length, SPI_FLASH_MMAP_DATA, (const void**)&retaddr, &mmapHandle[i].handle);
-	if (err==ESP_ERR_NO_MEM) {
+	//if (err==ESP_ERR_NO_MEM) {
 		lprintf(LO_ERROR, "I_Mmap: No free address space. Cleaning up unused cached mmaps...\n");
 		freeUnusedMmaps();
-		err=esp_partition_mmap(fds[ifd].part, offset, length, SPI_FLASH_MMAP_DATA, (const void**)&retaddr, &mmapHandle[i].handle);
-	}
+	//	err=esp_partition_mmap(fds[ifd].part, offset, length, SPI_FLASH_MMAP_DATA, (const void**)&retaddr, &mmapHandle[i].handle);
+	//}
+	//printf("test3-------------------------------------------------------------------------------******************\n");
+
 	mmapHandle[i].addr=retaddr;
 	mmapHandle[i].len=length;
 	mmapHandle[i].used=1;
 	mmapHandle[i].offset=offset;
+	//printf("test4-------------------------------------------------------------------------------******************\n");
 
-	if (err!=ESP_OK) {
-		lprintf(LO_ERROR, "I_Mmap: Can't mmap: %x (len=%d)!", err, length);
+	//if (err!=ESP_OK) {
+		printf("Killing myself : --******************\n");
+		//lprintf(LO_ERROR, "I_Mmap: Can't mmap: '%s' (len=%d)!\n", esp_err_to_name(err), length);
 		return NULL;
-	}
+	//}
+	//printf("test5-------------------------------------------------------------------------------******************\n");
 
 	return retaddr;
 }
@@ -508,7 +502,10 @@ void I_Read(int ifd, void* vbuf, size_t sz)
 */
 void I_Read(int ifd, void* vbuf, size_t sz)
 {
+
+	//printf("I_Read: %d bytes are about to be read, at offset %x, at part %lx, i = %d\n", (int)sz, fds[ifd].offset, fds[ifd].part->address, ifd);
 	uint8_t *d=I_Mmap(NULL, sz, 0, 0, ifd, fds[ifd].offset);
+	//printf("I_Read: %d bytes\n", *d);
 	memcpy(vbuf, d, sz);
 	I_Munmap(d, sz);
 }

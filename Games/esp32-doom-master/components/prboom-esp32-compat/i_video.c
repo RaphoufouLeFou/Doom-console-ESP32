@@ -52,7 +52,7 @@
 #include "st_stuff.h"
 #include "lprintf.h"
 
-#include "rom/ets_sys.h"
+
 #include "spi_lcd.h"
 
 // #include "esp_heap_alloc_caps.h"
@@ -141,7 +141,7 @@ int16_t lcdpal[256];
 
 void I_SetPalette (int pal)
 {
-	int i, r, g, b, v;
+	int i, v;
 	int pplump = W_GetNumForName("PLAYPAL");
 	const byte * palette = W_CacheLumpNum(pplump);
   //0x3c8d000c

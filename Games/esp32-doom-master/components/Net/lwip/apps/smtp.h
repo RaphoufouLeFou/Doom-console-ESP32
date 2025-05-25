@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include "lwip/apps/smtp_opts.h"
-#include "lwip/err.h"
+
 #include "lwip/prot/iana.h"
 
 /** The default TCP port used for SMTP */

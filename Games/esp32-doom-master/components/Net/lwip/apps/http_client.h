@@ -40,7 +40,7 @@
 
 #include "lwip/opt.h"
 #include "lwip/ip_addr.h"
-#include "lwip/err.h"
+
 #include "lwip/altcp.h"
 #include "lwip/prot/iana.h"
 #include "lwip/pbuf.h"

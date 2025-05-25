@@ -47,7 +47,7 @@ extern "C" {
 #if LWIP_SNMP /* don't build if not configured for use in lwipopts.h */
 
 #include "lwip/apps/snmp_core.h"
-#include "lwip/sys.h"
+
 
 typedef void (*snmp_threadsync_called_fn)(void* arg);
 typedef void (*snmp_threadsync_synchronizer_fn)(snmp_threadsync_called_fn fn, void* arg);

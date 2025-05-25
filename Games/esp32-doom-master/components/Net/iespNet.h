@@ -1,6 +1,6 @@
 #include "lwip/opt.h"
-#include "lwip/sockets.h"
-#include "lwip/sys.h"
+
+
 #include "lwip/mem.h"
 
 int SDLNet_ResolveHost(IPaddress *address, const char *host, Uint16 port);

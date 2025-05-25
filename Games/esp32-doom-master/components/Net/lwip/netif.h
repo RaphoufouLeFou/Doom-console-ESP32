@@ -41,7 +41,7 @@
 
 #define ENABLE_LOOPBACK (LWIP_NETIF_LOOPBACK || LWIP_HAVE_LOOPIF)
 
-#include "lwip/err.h"
+
 
 #include "lwip/ip_addr.h"
 

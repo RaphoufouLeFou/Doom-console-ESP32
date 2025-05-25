@@ -30,6 +30,9 @@
  *  Doom Network protocol packet definitions.
  *-----------------------------------------------------------------------------*/
 
+#ifndef PROTOCOL_H
+#define PROTOCOL_H
+
 #include "doomtype.h"
 #include "d_ticcmd.h"
 #include "m_swap.h"
@@ -95,3 +98,5 @@ inline static void TicToRaw(void* dst, const ticcmd_t* src)
   tmp.consistancy = doom_ntohs(tmp.consistancy);
   memcpy(dst,&tmp,sizeof tmp);
 }
+
+#endif //PROTOCOL_H

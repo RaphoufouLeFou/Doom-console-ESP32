@@ -49,7 +49,7 @@
 #if LWIP_IPV6  /* don't build if not configured for use in lwipopts.h */
 
 #include "lwip/ip6_addr.h"
-#include "lwip/err.h"
+
 
 #ifdef __cplusplus
 extern "C" {

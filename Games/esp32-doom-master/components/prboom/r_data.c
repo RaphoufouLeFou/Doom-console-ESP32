@@ -296,7 +296,7 @@ static void R_InitTextures (void)
     I_Error("R_InitTextures: %d errors", errors);
 
   // Precalculate whatever possible.
-  if (devparm) // cph - If in development mode, generate now so all errors are found at once
+  if (0) // cph - If in development mode, generate now so all errors are found at once
     for (i=0 ; i<numtextures ; i++)
     {
       // proff - This is for the new renderer now
@@ -588,11 +588,31 @@ void R_InitData(void)
 // killough 4/17/98: changed to use ns_flats namespace
 //
 
+char string2hexString(char* input)
+{
+    char output[sizeof(input)];
+    int loop;
+    int i;
+
+    i = 0;
+    loop = 0;
+
+    while (input[loop] != '\0') {
+        sprintf((char*)(output + i), "%02X ", input[loop]);
+        loop += 1;
+        i += 2;
+    }
+    //insert NULL at the end of the output string
+    output[i++] = '\0';
+
+    return *output;
+}
+
 int R_FlatNumForName(const char *name)    // killough -- const added
 {
   int i = (W_CheckNumForName)(name, ns_flats);
   if (i == -1)
-    I_Error("R_FlatNumForName: %.8s not found", name);
+    I_Error("R_FlatNumForName: %d not found", string2hexString(name));
   return i - firstflat;
 }
 

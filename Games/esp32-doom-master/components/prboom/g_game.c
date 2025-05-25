@@ -86,7 +86,7 @@
 #include "i_system.h"
 #include "r_demo.h"
 #include "r_fps.h"
-#include "esp_log.h"
+
 
 #define SAVEGAMESIZE  0x20000
 #define SAVESTRINGSIZE  24
@@ -575,7 +575,7 @@ static void G_DoLoadLevel (void)
       //extern msecnode_t *headsecnode; // phares 3/25/98
       //headsecnode = NULL;
   }
-
+  printf("init with : episode %d, map %d, skill %d\n", gameepisode, gamemap, gameskill); 
   P_SetupLevel (gameepisode, gamemap, 0, gameskill);
   if (!demoplayback) // Don't switch views if playing a demo
     displayplayer = consoleplayer;    // view the guy you are playing
@@ -813,10 +813,10 @@ void G_Ticker (void)
 
           if (netgame && !netdemo && !(gametic%ticdup) )
             {
-              if (gametic > BACKUPTICS
-                  && consistancy[i][buf] != cmd->consistancy)
-                I_Error("G_Ticker: Consistency failure (%i should be %i)",
-            cmd->consistancy, consistancy[i][buf]);
+              //if (gametic > BACKUPTICS
+                 // && consistancy[i][buf] != cmd->consistancy)
+                //I_Error("G_Ticker: Consistency failure (%i should be %i)",
+            //cmd->consistancy, consistancy[i][buf]);
               if (players[i].mo)
                 consistancy[i][buf] = players[i].mo->x;
               else
@@ -2129,6 +2129,7 @@ void G_InitNew(skill_t skill, int episode, int map)
 
   if (map < 1)
     map = 1;
+  printf("gamemode = %d\n", gamemode);
   if (map > 9 && gamemode != commercial)
     map = 9;
 

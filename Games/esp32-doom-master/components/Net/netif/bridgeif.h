@@ -39,7 +39,7 @@
 
 #include "netif/bridgeif_opts.h"
 
-#include "lwip/err.h"
+
 #include "lwip/prot/ethernet.h"
 
 #ifdef __cplusplus
@@ -104,7 +104,7 @@ void*               bridgeif_fdb_init(u16_t max_fdb_entries);
 #if BRIDGEIF_PORT_NETIFS_OUTPUT_DIRECT
 #ifndef BRIDGEIF_DECL_PROTECT
 /* define bridgeif protection to sys_arch_protect... */
-#include "lwip/sys.h"
+
 #define BRIDGEIF_DECL_PROTECT(lev)    SYS_ARCH_DECL_PROTECT(lev)
 #define BRIDGEIF_READ_PROTECT(lev)    SYS_ARCH_PROTECT(lev)
 #define BRIDGEIF_READ_UNPROTECT(lev)  SYS_ARCH_UNPROTECT(lev)

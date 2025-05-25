@@ -40,7 +40,7 @@
 
 #include "lwip/arch.h"
 #include "lwip/inet.h"
-#include "lwip/sockets.h"
+
 
 #ifdef __cplusplus
 extern "C" {

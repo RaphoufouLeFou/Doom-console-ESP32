@@ -49,10 +49,17 @@
         #define IPPORT_RESERVED 1024
 #endif
 
+#include "protocol.h"
+#include <stdint.h>
+
 void I_InitNetwork(void);
 size_t I_GetPacket(packet_header_t* buffer, size_t buflen);
+size_t I_GetServerPacket(packet_header_t* buffer, size_t buflen);
 void I_SendPacket(packet_header_t* packet, size_t len);
+void I_SendPacketTo(packet_header_t* packet, size_t len, uint8_t *to);
 void I_WaitForPacket(int ms);
+void I_WaitForPacketServer(int ms);
+int Server_Main(int argc, char** argv);
 
 #ifdef USE_SDL_NET
 UDP_SOCKET I_Socket(Uint16 port);

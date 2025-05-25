@@ -23,22 +23,13 @@
 #include "d_main.h"
 #include "gamepad.h"
 #include "lprintf.h"
-#include "driver/adc.h"
-#include "esp_adc_cal.h"
-#include "driver/gpio.h"
-#include "psxcontroller.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
-#include "mcp23017.h"
-
 
 
 //The gamepad uses keyboard emulation, but for compilation, these variables need to be placed
 //somewhere. THis is as good a place as any.
 int usejoystick=0;
 int joyleft, joyright, joyup, joydown;
-static esp_adc_cal_characteristics_t *adc1_chars;
+// static esp_adc_cal_characteristics_t *adc1_chars;
 
 //atomic, for communication between joy thread and main game thread
 volatile int joyValnumY=0;
@@ -95,7 +86,7 @@ static const JsKeyMap keymap[]={
 
 void gamepadPoll(void)
 {
-
+/*
 	
 	event_t ev;
 	joyValX = adc1_get_raw(ADC1_CHANNEL_5);
@@ -254,12 +245,14 @@ void gamepadPoll(void)
 		//printf("15 is now %d\n", GpioVal6);
 		D_PostEvent(&evButton);
 	}else if(!gpio_get_level(GPIO_NUM_15)) GpioVal6=0;
+	*/
 }
 
 
 
 void gamepadInit(void)
 {
+	/*
 	adc1_config_channel_atten( ADC1_CHANNEL_5, ADC_ATTEN_DB_11 );
 	adc1_config_channel_atten( ADC1_CHANNEL_4, ADC_ATTEN_DB_11 );
 	adc1_config_width(ADC_WIDTH_BIT_12);
@@ -267,6 +260,7 @@ void gamepadInit(void)
     ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11));
     ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11));
 	adc1_chars = (esp_adc_cal_characteristics_t *)calloc(1, sizeof(esp_adc_cal_characteristics_t));
+
 	gpio_set_direction(GPIO_NUM_15, GPIO_MODE_INPUT);
 	gpio_set_direction(GPIO_NUM_16, GPIO_MODE_INPUT);
 	gpio_set_direction(GPIO_NUM_5, GPIO_MODE_INPUT);
@@ -276,7 +270,9 @@ void gamepadInit(void)
 	gpio_set_direction(GPIO_NUM_1, GPIO_MODE_INPUT);
 	gpio_set_direction(GPIO_NUM_8, GPIO_MODE_INPUT);
 	gpio_set_direction(GPIO_NUM_18, GPIO_MODE_INPUT);
+
 	lprintf(LO_INFO, "gamepadInit: Initializing game pad.\n");
+	*/
 }
 
 void jsInit() {

@@ -51,7 +51,7 @@
 #include "lwip/pbuf.h"
 #include "lwip/netif.h"
 
-#include "lwip/err.h"
+
 
 #ifdef __cplusplus
 extern "C" {

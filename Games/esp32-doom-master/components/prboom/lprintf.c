@@ -54,7 +54,7 @@
 #include "i_main.h"
 #include "m_argv.h"
 
-#include "rom/ets_sys.h"
+
 
 int cons_error_mask = -1-LO_INFO; /* all but LO_INFO when redir'd */
 int cons_output_mask = -1;        /* all output enabled */

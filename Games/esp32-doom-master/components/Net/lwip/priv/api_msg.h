@@ -41,8 +41,8 @@
 
 #include "lwip/arch.h"
 #include "lwip/ip_addr.h"
-#include "lwip/err.h"
-#include "lwip/sys.h"
+
+
 #include "lwip/igmp.h"
 #include "lwip/api.h"
 #include "lwip/priv/tcpip_priv.h"

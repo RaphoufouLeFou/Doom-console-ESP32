@@ -88,11 +88,11 @@ static void R_ClipWallSegment(int first, int last, boolean solid)
       int to;
       if (!(p = memchr(solidcol+first, 1, last-first))) to = last;
       else to = p - solidcol;
-      R_StoreWallRange(first, to-1);
+        R_StoreWallRange(first, to-1);
       if (solid) {
-  memset(solidcol+first,1,to-first);
+        memset(solidcol+first,1,to-first);
       }
-  first = to;
+        first = to;
     }
   }
 }
@@ -291,7 +291,7 @@ sector_t *R_FakeFlat(sector_t *sec, sector_t *tempsec,
 // Clips the given segment
 // and adds any visible pieces to the line list.
 //
-#include "rom/ets_sys.h"
+
 static void R_AddLine (seg_t *line)
 {
   int      x1;
@@ -448,6 +448,10 @@ static boolean R_CheckBBox(const fixed_t *bspcoord)
       return true;
 
     check = checkcoord[boxpos];
+
+    // 
+    
+
     angle1 = R_PointToAngle (bspcoord[check[0]], bspcoord[check[1]]) - viewangle;
     angle2 = R_PointToAngle (bspcoord[check[2]], bspcoord[check[3]]) - viewangle;
   }

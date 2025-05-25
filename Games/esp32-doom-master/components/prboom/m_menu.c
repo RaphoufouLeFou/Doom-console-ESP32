@@ -60,9 +60,9 @@
 #include "i_sound.h"
 #include "r_demo.h"
 #include "r_fps.h"
-#include "esp_err.h"
-#include "esp_partition.h"
-#include <esp_spi_flash.h>
+
+
+
 
 extern patchnum_t hu_font[HU_FONTSIZE];
 extern boolean  message_dontfuckwithme;
@@ -847,9 +847,9 @@ void M_ReadSaveStrings(void)
      * cph - add not-demoplayback parameter */
     G_SaveGameName(name,sizeof(name),i,false);
 
-    const esp_partition_t* part;
-	  part=esp_partition_find_first(65, i, NULL);
-    esp_partition_read_raw(part, 32, &savegamestrings[i], SAVESTRINGSIZE); 
+    //const esp_partition_t* part;
+	  //part=esp_partition_find_first(65, i, NULL);
+    //esp_partition_read_raw(part, 32, &savegamestrings[i], SAVESTRINGSIZE); 
 	  if (savegamestrings[i][0]==0xff)
     {
       strcpy(&savegamestrings[i][0],s_EMPTYSTRING);
@@ -902,7 +902,7 @@ static void SetDefaultSaveName (int slot)
   char *name = malloc(SAVESTRINGSIZE);
   char *slotName = malloc(3);
   strcpy(name, "Save ");
-  itoa(slotName, name, 10);
+  itoa(slot, slotName, 10);
   strcat(name, slotName);
   snprintf(savegamestrings[itemOn], SAVESTRINGSIZE, "%s", name);
   free(name);
@@ -2821,7 +2821,7 @@ void M_DrawEnemy(void)
   inhelpscreens = true;
 
   M_DrawBackground("FLOOR4_6", 0); // Draw background
-  // proff/nicolas 09/20/98 -- changed for hi-res
+  // proff/nicolas 09/20/98 -- changed for hi-resF
   V_DrawNamePatch(114, 2, 0, "M_ENEM", CR_DEFAULT, VPT_STRETCH);
   M_DrawInstructions();
   M_DrawScreenItems(current_setup_menu);

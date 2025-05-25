@@ -37,7 +37,7 @@
 #ifndef PPPOS_H
 #define PPPOS_H
 
-#include "lwip/sys.h"
+
 
 #include "ppp.h"
 #include "vj.h"

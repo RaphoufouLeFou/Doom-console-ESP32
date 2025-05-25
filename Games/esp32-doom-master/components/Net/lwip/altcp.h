@@ -45,7 +45,7 @@
 #if LWIP_ALTCP /* don't build if not configured for use in lwipopts.h */
 
 #include "lwip/tcpbase.h"
-#include "lwip/err.h"
+
 #include "lwip/pbuf.h"
 #include "lwip/ip_addr.h"
 

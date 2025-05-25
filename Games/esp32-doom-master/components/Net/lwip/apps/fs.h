@@ -33,7 +33,7 @@
 #define LWIP_HDR_APPS_FS_H
 
 #include "httpd_opts.h"
-#include "lwip/err.h"
+
 
 #ifdef __cplusplus
 extern "C" {

@@ -47,7 +47,7 @@ extern "C" {
 
 #if LWIP_SNMP /* don't build if not configured for use in lwipopts.h */
 
-#include "lwip/err.h"
+
 #include "lwip/apps/snmp_core.h"
 
 /** SNMP variable binding descriptor (publically needed for traps) */

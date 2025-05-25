@@ -974,6 +974,7 @@ static R_DrawSpan_f drawspanfuncs[VID_MODEMAX][RDRAW_FILTER_MAXFILTERS][RDRAW_FI
 R_DrawSpan_f R_GetDrawSpanFunc(enum draw_filter_type_e filter,
                                enum draw_filter_type_e filterz) {
   R_DrawSpan_f result = drawspanfuncs[V_GetMode()][filterz][filter];
+  //0 1 1
   if (result == NULL)
     I_Error("R_GetDrawSpanFunc: undefined function (%d, %d)",
             filter, filterz);

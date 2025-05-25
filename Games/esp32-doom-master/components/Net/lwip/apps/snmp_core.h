@@ -41,7 +41,7 @@
 #if LWIP_SNMP /* don't build if not configured for use in lwipopts.h */
 
 #include "lwip/ip_addr.h"
-#include "lwip/err.h"
+
 
 #ifdef __cplusplus
 extern "C" {

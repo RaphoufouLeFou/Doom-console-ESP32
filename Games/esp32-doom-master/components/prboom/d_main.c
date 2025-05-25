@@ -82,9 +82,9 @@
 #include "d_deh.h"  // Ty 04/08/98 - Externalizations
 #include "lprintf.h"  // jff 08/03/98 - declaration of lprintf
 #include "am_map.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_heap_caps.h"
+
+
+
 
 void GetFirstMap(int *ep, int *map); // Ty 08/29/98 - add "-warp x" functionality
 static void D_PageDrawer(void);
@@ -300,6 +300,7 @@ void D_Display (void)
   // menus go directly to the screen
   M_Drawer();          // menu is drawn even on top of everything
 #ifdef HAVE_NET
+  //printf("loop from d_main : D_Display() : 303\n");
   NetUpdate();         // send out any new accumulation
 #else
   D_BuildNewTiccmds();
@@ -349,6 +350,7 @@ static void D_DoomLoop(void)
       if (ffmap == gamemap) ffmap = 0;
 
       // process one or more tics
+      //singletics = true;
       if (singletics)
         {
           I_StartTic ();
@@ -361,9 +363,10 @@ static void D_DoomLoop(void)
           gametic++;
           maketic++;
         }
-      else
-        TryRunTics (); // will run at least one tic
+      else{
 
+        TryRunTics (); // will run at least one tic
+}
       // killough 3/16/98: change consoleplayer to displayplayer
       if (players[displayplayer].mo) // cph 2002/08/10
 	S_UpdateSounds(players[displayplayer].mo);// move positional sounds
@@ -374,6 +377,7 @@ static void D_DoomLoop(void)
       )
         {
         // Update display, next frame, with current state.
+        //printf ("D_Display from gamestate = %d, %d\n", gamestate, singletics);
         D_Display();
       }
 
@@ -741,6 +745,7 @@ static void CheckIWAD(const char *iwadname,GameMode_t *gmode,boolean *hassec)
 //            fread (fileinfo, sizeof(filelump_t), length, fp) != length ||
 //            fclose(fp))
 //          I_Error("CheckIWAD: failed to read directory %s",iwadname);
+
 		I_Lseek(fd, header.infotableofs, SEEK_SET);
 		I_Read(fd, fileinfo, sizeof(filelump_t)*length);
 
@@ -1275,7 +1280,7 @@ static void D_DoomMainSetup(void)
       //FindResponseFile();
     } while (rsp_found==true);
   }
-
+  printf("myragcccc = %d", myargc);
   lprintf(LO_INFO,"M_LoadDefaults: Load system defaults.\n");
   M_LoadDefaults();              // load before initing other systems
 
@@ -1544,6 +1549,7 @@ static void D_DoomMainSetup(void)
   D_BuildBEXTables(); // haleyjd
 
   p = M_CheckParm ("-deh");
+  p = 0;
   if (p)
     {
       char file[PATH_MAX+1];      // cph - localised
@@ -1734,6 +1740,10 @@ static void D_DoomMainSetup(void)
     if (!singledemo) {                  /* killough 12/98 */
       if (autostart || netgame)
   {
+    startskill = 2;
+    startepisode = 1;
+    startmap = 1;
+    printf("start infos : %d, %d, %d\n", startskill, startepisode, startmap);
     G_InitNew(startskill, startepisode, startmap);
     if (demorecording)
       G_BeginRecording();
@@ -1741,6 +1751,22 @@ static void D_DoomMainSetup(void)
       else
   D_StartTitle();                 // start up intro loop
     }
+
+            ticcmd_t cmdClientSimulated;
+  cmdClientSimulated.angleturn = 0;
+  cmdClientSimulated.buttons = 0;
+  cmdClientSimulated.chatchar = 0;
+  cmdClientSimulated.consistancy = 0;
+  cmdClientSimulated.forwardmove = 0;
+  cmdClientSimulated.sidemove = 0;
+  cmdClientSimulated.forwardmove = 0;
+  netcmds[1][0%BACKUPTICS] = cmdClientSimulated;
+  playeringame[1] = true;
+  memcpy(&players[1], &players[0], sizeof(player_t));
+  players[1].mo = P_SpawnMobj(players[1].mo->x, players[1].mo->y, players[1].mo->z, MT_PLAYER);
+  players[1].cmd = cmdClientSimulated;
+  players[1].colormap = 1;
+printf("Added it\n");
 }
 
 //

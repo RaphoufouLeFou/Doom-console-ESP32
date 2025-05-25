@@ -40,7 +40,6 @@
  *-----------------------------------------------------------------------------
  */
 
-
 // use config.h if autoconf made one -- josh
 #if 1
 #include "config.h"
@@ -55,7 +54,7 @@
 #include "v_video.h"
 #include "g_game.h"
 #include "lprintf.h"
-#include "esp_heap_caps.h"
+
 #include "i_system.h"
 
 #ifdef DJGPP
@@ -328,6 +327,7 @@ void Z_Init(void)
  * free all the stuff we just pass on the way.
  */
 
+
 void *(Z_Malloc)(size_t size, int tag, void **user
 #ifdef INSTRUMENTED
      , const char *file, int line
@@ -386,8 +386,8 @@ void *(Z_Malloc)(size_t size, int tag, void **user
 #ifdef HAVE_LIBDMALLOC
   while (!(block = dmalloc_malloc(file,line,size + HEADER_SIZE,DMALLOC_FUNC_MALLOC,0,0))) {
 #else
-  //while (!(block = (malloc)(size + HEADER_SIZE))) {
-    while (!(block = (heap_caps_malloc)(size + HEADER_SIZE, MALLOC_CAP_SPIRAM))) {
+  while (!(block = (malloc)(size + HEADER_SIZE))) {
+  //while (!(block = (heap_caps_malloc)(size + HEADER_SIZE, MALLOC_CAP_SPIRAM))) {
 #endif
     if (!blockbytag[PU_CACHE])
       I_Error ("Z_Malloc: Failure trying to allocate %lu bytes"
@@ -445,7 +445,6 @@ void *(Z_Malloc)(size_t size, int tag, void **user
   // scramble memory -- weed out any bugs
   memset(block, gametic & 0xff, size);
 #endif
-
   return block;
 }
 

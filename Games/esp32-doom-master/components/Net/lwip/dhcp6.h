@@ -44,7 +44,7 @@
 
 #if LWIP_IPV6_DHCP6  /* don't build if not configured for use in lwipopts.h */
 
-#include "lwip/err.h"
+
 #include "lwip/netif.h"
 
 #ifdef __cplusplus

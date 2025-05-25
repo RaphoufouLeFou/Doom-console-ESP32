@@ -39,7 +39,7 @@
 #define LWIP_HDR_IP4_FRAG_H
 
 #include "lwip/opt.h"
-#include "lwip/err.h"
+
 #include "lwip/pbuf.h"
 #include "lwip/netif.h"
 #include "lwip/ip_addr.h"

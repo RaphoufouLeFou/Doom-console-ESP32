@@ -42,7 +42,7 @@
 #define LWIP_HDR_APPS_HTTPD_H
 
 #include "httpd_opts.h"
-#include "lwip/err.h"
+
 #include "lwip/pbuf.h"
 
 #ifdef __cplusplus

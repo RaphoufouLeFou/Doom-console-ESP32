@@ -39,6 +39,7 @@
 #endif
 
 #include "m_fixed.h"
+#include <stdio.h>
 
 extern int ms_to_next_tick;
 int I_StartDisplay(void);
@@ -77,6 +78,9 @@ void I_SetAffinityMask(void);
 
 
 int doom_main(int argc, char const * const * argv);
+int server_main(int argc, char** argv);
+
+
 
 int I_Lseek(int fd, off_t offset, int whence);
 int I_Open(const char *wad, int flags);

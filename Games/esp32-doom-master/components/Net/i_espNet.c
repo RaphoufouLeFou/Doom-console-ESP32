@@ -2,8 +2,8 @@
 #include "string"
 #include "stdio"
 #include "lwip/opt.h"
-#include "lwip/sockets.h"
-#include "lwip/sys.h"
+
+
 #include "lwip/mem.h"
 
 

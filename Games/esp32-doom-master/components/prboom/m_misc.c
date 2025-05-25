@@ -47,7 +47,7 @@
 #endif
 #include <fcntl.h>
 #include <sys/stat.h>
-#include "esp_attr.h"
+
 #include "doomstat.h"
 #include "m_argv.h"
 #include "g_game.h"
@@ -70,10 +70,10 @@
 #include "r_draw.h"
 #include "r_demo.h"
 #include "r_fps.h"
-#include "esp_err.h"
-#include "esp_partition.h"
-#include <esp_spi_flash.h>
-#include "esp_log.h"
+
+
+
+
 
 /* cph - disk icon not implemented */
 static inline void I_BeginRead(void) {}
@@ -88,7 +88,7 @@ static const char *TAG = "SaveDialog";
 
 boolean M_WriteFile(char const *name, char *source, int length, int slot)
 {
-
+/*
   errno = 0;
   printf("Starting saving process\n");
   const esp_partition_t* part;
@@ -99,16 +99,17 @@ boolean M_WriteFile(char const *name, char *source, int length, int slot)
     static char ChrLen[32];
     itoa(length, ChrLen, 10);
 
-    ESP_ERROR_CHECK(esp_partition_erase_range(part, 0, part->size));
-    ESP_ERROR_CHECK(esp_partition_write_raw(part, 0, ChrLen, sizeof(ChrLen)));
-    ESP_ERROR_CHECK(esp_partition_write_raw(part, 32, source, length));
+    //ESP_ERROR_CHECK(esp_partition_erase_range(part, 0, part->size));
+    //ESP_ERROR_CHECK(esp_partition_write_raw(part, 0, ChrLen, sizeof(ChrLen)));
+    //ESP_ERROR_CHECK(esp_partition_write_raw(part, 32, source, length));
 
     printf("Saved %s\n", name);
 
     I_EndRead();                         // Disk icon off
+  
   }
 
-
+*/
   return length;
 }
 
@@ -120,6 +121,7 @@ boolean M_WriteFile(char const *name, char *source, int length, int slot)
 
 int M_ReadFile(char const *name, char **buffer, int slot)
 {
+  /*
   FILE *fp;
 
   printf("Attempting M_ReadFile %s\n", name);
@@ -144,6 +146,7 @@ int M_ReadFile(char const *name, char **buffer, int slot)
       return length;
 
     }
+    */
   /* cph 2002/08/10 - this used to return 0 on error, but that's ambiguous,
    * because we could have a legit 0-length file. So make it -1. */
   return -1;

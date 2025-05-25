@@ -47,7 +47,7 @@
 #include "lwip/pbuf.h"
 #include "lwip/ip.h"
 #include "lwip/icmp.h"
-#include "lwip/err.h"
+
 #include "lwip/ip6.h"
 #include "lwip/ip6_addr.h"
 

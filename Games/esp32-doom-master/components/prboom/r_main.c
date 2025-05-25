@@ -242,7 +242,7 @@ angle_t R_PointToAngle2(fixed_t viewx, fixed_t viewy, fixed_t x, fixed_t y)
 //
 // killough 5/2/98: reformatted
 
-#include "rom/ets_sys.h"
+
 static void R_InitTextureMapping (void)
 {
   register int i,x;
@@ -605,6 +605,7 @@ void R_RenderPlayerView (player_t* player)
 
   // check for new console commands.
 #ifdef HAVE_NET
+  //printf("loop from r_main : R_RenderPlayerView() : 608\n");
   NetUpdate ();
 #endif
 
@@ -614,6 +615,7 @@ void R_RenderPlayerView (player_t* player)
 
   // Check for new console commands.
 #ifdef HAVE_NET
+  //printf("loop from r_main : R_RenderPlayerView() : 618\n");
   NetUpdate ();
 #endif
 
@@ -622,6 +624,7 @@ void R_RenderPlayerView (player_t* player)
 
   // Check for new console commands.
 #ifdef HAVE_NET
+  //printf("loop from r_main : R_RenderPlayerView() : 627\n");
   NetUpdate ();
 #endif
 
@@ -632,6 +635,7 @@ void R_RenderPlayerView (player_t* player)
 
   // Check for new console commands.
 #ifdef HAVE_NET
+  //printf("loop from r_main : R_RenderPlayerView() : 638\n");
   NetUpdate ();
 #endif
 
